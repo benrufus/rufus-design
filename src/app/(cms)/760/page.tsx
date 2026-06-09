@@ -10,20 +10,26 @@ const QUICK_LINKS = [
   { href: '/760/settings', icon: '⚙️', label: 'Site Settings', desc: 'Phone, email, social links' },
 ]
 
+function getGreeting() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
 export default function DashboardPage() {
-  const supabase = createClient()
   return (
     <div style={{ padding: '2.5rem' }}>
       <div style={{ marginBottom: '2.5rem' }}>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
-          Good morning<span style={{ color: '#ff8000' }}>.</span>
+          {getGreeting()}<span style={{ color: '#ff8000' }}>.</span>
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem' }}>
           What would you like to update today?
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
         {QUICK_LINKS.map(link => (
           <Link key={link.href} href={link.href} style={{ textDecoration: 'none' }}>
             <div className="card" style={{ transition: 'border-color 0.2s, transform 0.2s', cursor: 'pointer' }}
