@@ -27,8 +27,6 @@ export default function SectionRenderer({ section, data }: SectionRendererProps)
         <Hero
           words={data.homePage?.hero_words || undefined}
           intro={data.homePage?.hero_subtext || undefined}
-          cta1={data.homePage?.hero_cta1 || undefined}
-          cta2={data.homePage?.hero_cta2 || undefined}
         />
       )
     case 'marquee':
