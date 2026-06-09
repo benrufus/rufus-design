@@ -20,6 +20,7 @@ const NAV = [
     { href: '/760/contact', label: 'Contact Form', icon: '📬' },
     { href: '/760/settings', label: 'Site Settings', icon: '⚙️' },
     { href: '/760/seo', label: 'SEO & Analytics', icon: '🔍' },
+    { href: '/760/redirects', label: 'Redirects', icon: '🔀' },
   ]},
 ]
 
