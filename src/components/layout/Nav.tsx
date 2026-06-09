@@ -61,7 +61,7 @@ export default function Nav() {
             </Link>
           ))}
         </nav>
-        <div className="menu-dog"><img src="/RufusDoggo.png" alt="Rufus" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '50%' }} /></div>
+        <div className="menu-dog"><img src="/RufusDoggo.png" alt="Rufus" style={{ width: '250px', height: '250px', objectFit: 'cover'}} /></div>
       </div>
     </>
   )
