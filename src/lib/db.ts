@@ -2,31 +2,31 @@ import { createClient } from './supabase/server'
 
 export async function getSiteSettings() {
   const sb = await createClient()
-  const { data } = await sb.from('site_settings').select('*').single()
+  const { data } = await sb.from('site_settings').select('*').maybeSingle()
   return data
 }
 
 export async function getHomePage() {
   const sb = await createClient()
-  const { data } = await sb.from('home_page').select('*').single()
+  const { data } = await sb.from('home_page').select('*').maybeSingle()
   return data
 }
 
 export async function getAboutPage() {
   const sb = await createClient()
-  const { data } = await sb.from('about_page').select('*').single()
+  const { data } = await sb.from('about_page').select('*').maybeSingle()
   return data
 }
 
 export async function getContactForm() {
   const sb = await createClient()
-  const { data } = await sb.from('contact_form').select('*').single()
+  const { data } = await sb.from('contact_form').select('*').maybeSingle()
   return data
 }
 
 export async function getSeoSettings() {
   const sb = await createClient()
-  const { data } = await sb.from('seo_settings').select('*').single()
+  const { data } = await sb.from('seo_settings').select('*').maybeSingle()
   return data
 }
 

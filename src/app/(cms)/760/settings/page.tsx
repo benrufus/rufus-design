@@ -1,15 +1,23 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { createClient } from "@/lib/supabase/client"
+import { useState, useEffect, useRef } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 
-interface Settings { id: string; site_name: string; phone: string; email: string; address: string; google_rating: number; google_review_count: number; facebook_url: string; instagram_url: string; linkedin_url: string; calendly_url: string }
+interface Settings {
+  id: string; site_name: string; phone: string; email: string; address: string
+  google_rating: number; google_review_count: number; facebook_url: string
+  instagram_url: string; linkedin_url: string; calendly_url: string
+  favicon_url?: string; og_image_url?: string
+}
 
 export default function SettingsPage() {
   const supabase = createClient()
   const { show } = useToast()
   const [s, setS] = useState<Settings | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState<string | null>(null)
+  const faviconRef = useRef<HTMLInputElement>(null)
+  const ogRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     supabase.from('site_settings').select('*').single().then(({ data }) => { if (data) setS(data) })
@@ -25,6 +33,26 @@ export default function SettingsPage() {
 
   const set = (f: keyof Settings, v: unknown) => setS(x => x ? { ...x, [f]: v } : x)
 
+  const uploadFile = async (file: File, field: 'favicon_url' | 'og_image_url') => {
+    setUploading(field)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      form.append('folder', 'branding')
+      const res = await fetch('/api/upload', { method: 'POST', body: form })
+      const json = await res.json()
+      if (json.url) {
+        set(field, json.url)
+        show('Uploaded! Click Save to apply.', 'success')
+      } else {
+        show(json.error || 'Upload failed', 'error')
+      }
+    } catch {
+      show('Upload failed', 'error')
+    }
+    setUploading(null)
+  }
+
   if (!s) return <div style={{ padding: '2.5rem', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
 
   return (
@@ -34,6 +62,73 @@ export default function SettingsPage() {
         <button className="btn btn-orange" onClick={save} disabled={saving}>{saving ? 'Saving...' : '💾 Save'}</button>
       </div>
 
+      {/* Branding */}
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1.25rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Branding</h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          {/* Favicon */}
+          <div>
+            <p style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.45)', marginBottom: '0.75rem' }}>Favicon</p>
+            <div
+              onClick={() => faviconRef.current?.click()}
+              style={{ border: '2px dashed rgba(255,255,255,0.1)', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', borderRadius: '6px', transition: 'border-color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,128,0,0.4)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+            >
+              {s.favicon_url ? (
+                <img src={s.favicon_url} alt="Favicon" style={{ width: '48px', height: '48px', objectFit: 'contain', margin: '0 auto 0.5rem', display: 'block' }} />
+              ) : (
+                <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🌐</p>
+              )}
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
+                {uploading === 'favicon_url' ? 'Uploading...' : 'Click to upload'}
+              </p>
+              <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', marginTop: '0.25rem' }}>ICO or PNG, 32×32px</p>
+            </div>
+            <input ref={faviconRef} type="file" accept=".ico,.png,.svg" style={{ display: 'none' }}
+              onChange={e => e.target.files?.[0] && uploadFile(e.target.files[0], 'favicon_url')} />
+          </div>
+
+          {/* OG Image */}
+          <div>
+            <p style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.45)', marginBottom: '0.75rem' }}>Default Social Share Image</p>
+            <div
+              onClick={() => ogRef.current?.click()}
+              style={{ border: '2px dashed rgba(255,255,255,0.1)', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', borderRadius: '6px', transition: 'border-color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,128,0,0.4)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+            >
+              {s.og_image_url ? (
+                <img src={s.og_image_url} alt="OG Image" style={{ width: '100%', maxHeight: '80px', objectFit: 'cover', margin: '0 auto 0.5rem', display: 'block' }} />
+              ) : (
+                <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🖼️</p>
+              )}
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
+                {uploading === 'og_image_url' ? 'Uploading...' : 'Click to upload'}
+              </p>
+              <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', marginTop: '0.25rem' }}>1200×630px recommended</p>
+            </div>
+            <input ref={ogRef} type="file" accept="image/*" style={{ display: 'none' }}
+              onChange={e => e.target.files?.[0] && uploadFile(e.target.files[0], 'og_image_url')} />
+          </div>
+        </div>
+
+        {s.favicon_url && (
+          <div className="field" style={{ marginTop: '1rem', marginBottom: 0 }}>
+            <label>Favicon URL</label>
+            <input value={s.favicon_url || ''} onChange={e => set('favicon_url', e.target.value)} placeholder="https://..." />
+          </div>
+        )}
+
+        <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(255,128,0,0.05)', border: '1px solid rgba(255,128,0,0.15)', borderRadius: '6px' }}>
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+            ⚠️ After uploading a new favicon, copy the URL and place the file at <code style={{ color: 'rgba(255,128,0,0.8)' }}>src/app/icon.png</code> in your repo for Next.js to serve it. The URL here is used for SEO metadata.
+          </p>
+        </div>
+      </div>
+
+      {/* Contact details */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1.25rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact details</h2>
         <div className="field"><label>Phone</label><input value={s.phone || ''} onChange={e => set('phone', e.target.value)} /></div>
@@ -42,6 +137,7 @@ export default function SettingsPage() {
         <div className="field"><label>Calendly booking URL</label><input value={s.calendly_url || ''} onChange={e => set('calendly_url', e.target.value)} /></div>
       </div>
 
+      {/* Social */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1.25rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Social media</h2>
         <div className="field"><label>Facebook URL</label><input value={s.facebook_url || ''} onChange={e => set('facebook_url', e.target.value)} placeholder="https://facebook.com/..." /></div>
@@ -49,6 +145,7 @@ export default function SettingsPage() {
         <div className="field"><label>LinkedIn URL</label><input value={s.linkedin_url || ''} onChange={e => set('linkedin_url', e.target.value)} placeholder="https://linkedin.com/..." /></div>
       </div>
 
+      {/* Google reviews */}
       <div className="card">
         <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1.25rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Google reviews</h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
