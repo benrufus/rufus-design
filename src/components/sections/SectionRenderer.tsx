@@ -6,6 +6,7 @@ import About from './About'
 import Testimonials from './Testimonials'
 import News from './News'
 import Contact from './Contact'
+import LogoStrip from '@/components/ui/LogoStrip'
 
 interface Section {
   id: string
@@ -31,6 +32,16 @@ export default function SectionRenderer({ section, data }: SectionRendererProps)
       )
     case 'marquee':
       return <Marquee items={data.marqueeItems || []} />
+    case 'logos':
+      return (
+        <>
+          {(data.logoStrips || []).map((strip: any) =>
+            strip.logo_strip_items?.length > 0
+              ? <LogoStrip key={strip.id} strip={strip} />
+              : null
+          )}
+        </>
+      )
     case 'services':
       return <Services services={data.services || []} />
     case 'work':
