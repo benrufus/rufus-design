@@ -34,7 +34,8 @@ export default function Footer() {
           <ul className="footer-links">
             <li><a href="mailto:hello@rufusdesign.co.uk">hello@rufusdesign.co.uk</a></li>
             <li><a href="tel:01442123456">01442 123 456</a></li>
-            <li style={{ marginTop: '0.5rem' }}>Berkhamsted</li>
+            <li>4 Friars Field</li>
+            <li>Berkhamsted</li>
             <li>Hertfordshire</li>
           </ul>
         </div>
