@@ -288,6 +288,9 @@ button { cursor: none; font-family: var(--font-body); }
 /* ─── Section shared ─────────────────────────────────── */
 .section {
   padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
 }
 .section-label {
   font-size: 0.65rem;
@@ -327,6 +330,8 @@ button { cursor: none; font-family: var(--font-body); }
   overflow: hidden;
   background: var(--orange);
   padding: 1rem 0;
+  position: relative;
+  z-index: 1;
 }
 .marquee-track {
   display: flex;
@@ -360,6 +365,8 @@ button { cursor: none; font-family: var(--font-body); }
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
 .service-card {
   background: var(--bg);
@@ -401,21 +408,16 @@ button { cursor: none; font-family: var(--font-body); }
 }
 .service-card:hover .service-desc { color: rgba(255,255,255,0.7); }
 
-/* ─── Work grid ──────────────────────────────────────── */
+/* ─── Work grid (homepage asymmetric — kept for fallback) */
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.5rem;
 }
-.work-card { position: relative; overflow: hidden; background: var(--card); }
-.work-card:nth-child(1) { grid-column: span 7; }
-.work-card:nth-child(2) { grid-column: span 5; }
-.work-card:nth-child(3) { grid-column: span 5; }
-.work-card:nth-child(4) { grid-column: span 7; }
-.work-card:nth-child(n+5) { grid-column: span 4; }
-@media (max-width: 900px) { .work-grid { grid-template-columns: 1fr 1fr; } .work-card { grid-column: span 1 !important; } }
 @media (max-width: 600px) { .work-grid { grid-template-columns: 1fr; } }
-.work-card-img { aspect-ratio: 16/10; overflow: hidden; }
+.work-card { position: relative; overflow: hidden; background: var(--card); border: 1px solid var(--border); transition: border-color 0.3s, transform 0.3s; }
+.work-card:hover { border-color: var(--orange); transform: translateY(-4px); }
+.work-card-img { aspect-ratio: 16/9; overflow: hidden; }
 .work-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
 .work-card:hover .work-card-img img { transform: scale(1.05); }
 .work-card-info { padding: 1.5rem; }
@@ -424,7 +426,7 @@ button { cursor: none; font-family: var(--font-body); }
   font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
   background: rgba(255,128,0,0.12); color: var(--orange); padding: 0.2em 0.6em;
 }
-.work-card h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); margin-bottom: 0.5rem; }
+.work-card h3 { font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.1rem, 2vw, 1.4rem); margin-bottom: 0.5rem; color: #fff; }
 .work-card-client { font-size: 0.8rem; color: var(--muted); }
 .work-card-overlay {
   position: absolute; inset: 0;
@@ -500,7 +502,7 @@ button { cursor: none; font-family: var(--font-body); }
 .contact-form-group textarea:focus { border-color: var(--orange); }
 
 /* ─── Footer ─────────────────────────────────────────── */
-.footer { background: var(--bg2); border-top: 1px solid var(--border); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem) 2rem; }
+.footer { background: var(--bg2); border-top: 1px solid var(--border); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem) 2rem; position: relative; z-index: 1; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
 @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } }
@@ -577,7 +579,12 @@ button { cursor: none; font-family: var(--font-body); }
   100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
 }
 
-/* ─── Original CMS classes (ported from rufus-cms) ───── */
+@keyframes logoScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── CMS component classes ──────────────────────────── */
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
 .btn-orange { background: var(--orange); color: #fff; }
 .btn-orange:hover { background: #e67300; }
@@ -633,19 +640,10 @@ button { cursor: none; font-family: var(--font-body); }
 .tiptap a { color: var(--orange); text-decoration: underline; }
 .tiptap p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; color: rgba(255,255,255,0.45); pointer-events: none; height: 0; }
 
-/* Override toast to use original CMS style inside CMS */
+/* ─── CMS overrides ──────────────────────────────────── */
 .cms-wrap .toast { position: fixed; bottom: 2rem; right: 2rem; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.875rem 1.25rem; font-size: 0.875rem; z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,0.4); min-width: auto; }
 .cms-wrap .toast-success { border-left: 3px solid #4ade80; color: #fff; background: #1a1a1a; }
 .cms-wrap .toast-error { border-left: 3px solid #f87171; color: #fff; background: #1a1a1a; }
 .cms-wrap .grid-canvas-wrap,
 .cms-wrap .cursor-dot,
-.cms-wrap .cursor-ring {
-  display: none !important;
-}
-
-/* Sections block the grid canvas */
-.section {
-  position: relative;
-  z-index: 1;
-  background: var(--bg);
-}
+.cms-wrap .cursor-ring { display: none !important; }
