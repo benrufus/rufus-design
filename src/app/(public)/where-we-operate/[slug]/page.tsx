@@ -34,7 +34,6 @@ export default async function LocationPage({ params }: Props) {
   return (
     <>
       <LocationHero
-        town={location.town}
         intro={location.intro}
       />
 
