@@ -1,6 +1,5 @@
 'use client'
 import { useState, useRef } from 'react'
-import { uploadImage } from "@/lib/supabase/client"
 
 interface Props {
   value?: string
@@ -10,14 +9,17 @@ interface Props {
 }
 
 export default function ImageUpload({ value, onChange, folder = 'general', label = 'Image' }: Props) {
-  const supabase = createClient()
   const [uploading, setUploading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFile = async (file: File) => {
     setUploading(true)
-    const url = await uploadImage(file, folder)
-    if (url) onChange(url)
+    const form = new FormData()
+    form.append('file', file)
+    form.append('folder', folder)
+    const res = await fetch('/api/upload', { method: 'POST', body: form })
+    const data = await res.json()
+    if (data.url) onChange(data.url)
     setUploading(false)
   }
 
@@ -47,11 +49,22 @@ export default function ImageUpload({ value, onChange, folder = 'general', label
       </div>
       {value && (
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-          <input value={value} onChange={e => onChange(e.target.value)} placeholder="Or paste URL" style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', outline: 'none' }} />
+          <input
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            placeholder="Or paste URL"
+            style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', outline: 'none' }}
+          />
           <button type="button" onClick={() => onChange('')} className="btn btn-danger btn-sm">Remove</button>
         </div>
       )}
-      <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
+      />
     </div>
   )
 }
