@@ -647,3 +647,73 @@ button { cursor: none; font-family: var(--font-body); }
 .cms-wrap .grid-canvas-wrap,
 .cms-wrap .cursor-dot,
 .cms-wrap .cursor-ring { display: none !important; }
+
+/* ─── Hero shared classes ────────────────────────────── */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+  background: radial-gradient(ellipse 65% 55% at 68% 42%, rgba(255,128,0,0.12) 0%, transparent 65%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+.hero-heading {
+  font-family: var(--font-raleway);
+  font-weight: 800;
+  font-size: clamp(3rem, 9vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  max-width: 1100px;
+}
+.hero-cycle {
+  display: block;
+  height: 1.05em;
+  overflow: hidden;
+  position: relative;
+}
+.hero-cycle-word {
+  position: absolute;
+  top: 0; left: 0;
+  display: block;
+  color: #ff8000;
+  white-space: nowrap;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.42s cubic-bezier(0.76,0,0.24,1), opacity 0.3s;
+}
+.hero-cycle-word.exiting {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.hero-static {
+  display: block;
+}
+.hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 2;
+}
+.hero-scroll-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  writing-mode: vertical-rl;
+}
