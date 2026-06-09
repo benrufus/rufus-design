@@ -2,20 +2,28 @@
 import { useState } from 'react'
 import { useReveal } from '@/lib/useReveal'
 
-interface Testimonial { id: string; name: string; role?: string; company?: string; quote: string; rating?: number }
+interface Testimonial {
+  id: string
+  name: string
+  role?: string
+  company?: string
+  quote: string
+  rating?: number
+}
+
 interface TestimonialsProps { items?: Testimonial[] }
 
-const DEFAULT_TESTIMONIALS: Testimonial[] = [
-  { id: '1', quote: 'Rufus Design transformed our online presence completely.', name: 'Sarah C.', role: 'Director', company: 'CHSO Events', rating: 5 },
+const DEFAULT: Testimonial[] = [
+  { id: '1', name: 'Sarah C.', role: 'Director', company: 'CHSO Events', quote: 'Rufus Design transformed our online presence completely. The new site loads incredibly fast, looks stunning, and has genuinely driven more enquiries through the door.', rating: 5 },
+  { id: '2', name: 'James M.', role: 'Owner', company: 'The Lab Gym', quote: 'Ben and the team are brilliant — they actually understand your business, not just the tech. Our Google ranking went from page three to page one within four months.', rating: 5 },
 ]
 
-export default function Testimonials({ items = DEFAULT_TESTIMONIALS }: TestimonialsProps) {
+export default function Testimonials({ items }: TestimonialsProps) {
   const [current, setCurrent] = useState(0)
   const { ref, visible } = useReveal()
+  const list = items?.length ? items : DEFAULT
 
-  if (!items.length) return null
-
-  const t = items[current]
+  const t = list[current]
 
   return (
     <section className="section" ref={ref as React.RefObject<HTMLElement>}>
@@ -32,14 +40,21 @@ export default function Testimonials({ items = DEFAULT_TESTIMONIALS }: Testimoni
             <p className="testimonial-role">{[t.role, t.company].filter(Boolean).join(', ')}</p>
           )}
         </div>
-        {items.length > 1 && (
+        {list.length > 1 && (
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
-            {items.map((_, i) => (
-              <button key={i} onClick={() => setCurrent(i)} style={{
-                width: i === current ? '2rem' : '0.5rem', height: '0.5rem',
-                background: i === current ? 'var(--orange)' : 'rgba(255,255,255,0.2)',
-                border: 'none', transition: 'all 0.3s', borderRadius: '2px',
-              }} />
+            {list.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                style={{
+                  width: i === current ? '2rem' : '0.5rem',
+                  height: '0.5rem',
+                  background: i === current ? 'var(--orange)' : 'rgba(255,255,255,0.2)',
+                  border: 'none',
+                  transition: 'all 0.3s',
+                  borderRadius: '2px',
+                }}
+              />
             ))}
           </div>
         )}

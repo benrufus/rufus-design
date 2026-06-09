@@ -36,6 +36,16 @@ export async function getPageSeo(page_key: string) {
   return data
 }
 
+export async function getPageSections(page = 'home') {
+  const sb = await createClient()
+  const { data } = await sb
+    .from('page_sections')
+    .select('*')
+    .eq('page', page)
+    .order('sort_order')
+  return data || []
+}
+
 export async function getWork(publishedOnly = true) {
   const sb = await createClient()
   let q = sb.from('work').select('*').order('sort_order')
@@ -66,25 +76,41 @@ export async function getPostBySlug(slug: string) {
 
 export async function getTestimonials() {
   const sb = await createClient()
-  const { data } = await sb.from('testimonials').select('*').eq('active', true).order('sort_order')
+  const { data } = await sb
+    .from('testimonials')
+    .select('*')
+    .eq('active', true)
+    .order('sort_order')
   return data || []
 }
 
 export async function getTeam() {
   const sb = await createClient()
-  const { data } = await sb.from('team').select('*').eq('active', true).order('sort_order')
+  const { data } = await sb
+    .from('team')
+    .select('*')
+    .eq('active', true)
+    .order('sort_order')
   return data || []
 }
 
 export async function getServices() {
   const sb = await createClient()
-  const { data } = await sb.from('services').select('*').eq('active', true).order('sort_order')
+  const { data } = await sb
+    .from('services')
+    .select('*')
+    .eq('active', true)
+    .order('sort_order')
   return data || []
 }
 
 export async function getStats(page = 'home') {
   const sb = await createClient()
-  const { data } = await sb.from('stats').select('*').eq('page', page).order('sort_order')
+  const { data } = await sb
+    .from('stats')
+    .select('*')
+    .eq('page', page)
+    .order('sort_order')
   return data || []
 }
 
@@ -96,13 +122,21 @@ export async function getValues() {
 
 export async function getMarqueeItems() {
   const sb = await createClient()
-  const { data } = await sb.from('marquee_items').select('*').eq('active', true).order('sort_order')
+  const { data } = await sb
+    .from('marquee_items')
+    .select('*')
+    .eq('active', true)
+    .order('sort_order')
   return data || []
 }
 
 export async function getLogoStrips() {
   const sb = await createClient()
-  const { data } = await sb.from('logo_strips').select('*, logo_strip_items(*)').eq('active', true).order('sort_order')
+  const { data } = await sb
+    .from('logo_strips')
+    .select('*, logo_strip_items(*)')
+    .eq('active', true)
+    .order('sort_order')
   return data || []
 }
 
@@ -116,10 +150,4 @@ export async function getLocationBySlug(slug: string) {
   const sb = await createClient()
   const { data } = await sb.from('locations').select('*').eq('slug', slug).single()
   return data
-}
-
-export async function getPageSections(page = 'home') {
-  const sb = await createClient()
-  const { data } = await sb.from('page_sections').select('*').eq('page', page).eq('visible', true).order('sort_order')
-  return data || []
 }
