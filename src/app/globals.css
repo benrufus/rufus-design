@@ -132,8 +132,8 @@ button { cursor: none; font-family: var(--font-body); }
   text-transform: uppercase;
   padding: 0.65rem 1.4rem;
   border: 1.5px solid #fff;
-  color: #fff;
-  background: transparent;
+  color: #333;
+  background: #FE7F00;
   transition: background 0.2s, color 0.2s;
   line-height: 1;
 }
