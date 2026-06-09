@@ -68,9 +68,9 @@ export default function WorkGrid({ items, showTitle = false }: WorkGridProps) {
 
               {/* Info */}
               <div style={{ padding: '1.25rem' }}>
-                {item.tags?.length > 0 && (
+                {(item.tags?.length ?? 0) > 0 && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.6rem' }}>
-                    {item.tags.slice(0, 3).map(t => (
+                    {(item.tags ?? []).slice(0, 3).map(t => (
                       <span key={t} style={{ fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(255,128,0,0.1)', color: 'var(--orange)', padding: '0.2em 0.5em' }}>{t}</span>
                     ))}
                   </div>
