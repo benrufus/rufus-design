@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import WorkGrid from '@/components/sections/WorkGrid'
 import Contact from '@/components/sections/Contact'
+import LocationHero from '@/components/ui/LocationHero'
 import { getLocationBySlug, getWork, getSiteSettings } from '@/lib/db'
 
 export const revalidate = 0
@@ -36,71 +37,19 @@ export default async function LocationPage({ params }: Props) {
 
   return (
     <>
-      {/* Hero — full bleed image if available */}
-      <section style={{ paddingTop: '72px', background: 'var(--bg)', position: 'relative' }}>
-        {location.hero_image ? (
-          <div style={{ width: '100%', maxHeight: '500px', overflow: 'hidden', position: 'relative' }}>
-            <img
-              src={location.hero_image}
-              alt={location.town}
-              style={{ width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' }}
-            />
-            <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%',
-              background: 'linear-gradient(to top, rgba(17,17,17,0.97) 0%, transparent 100%)',
-            }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
-              {location.county && (
-                <p style={{ fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--orange)', marginBottom: '0.75rem' }}>
-                  {location.county}
-                </p>
-              )}
-              <h1 style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
-                lineHeight: 1.05,
-                color: '#fff',
-              }}>
-                Web Design {location.town}<span style={{ color: 'var(--orange)' }}>.</span>
-              </h1>
-              {location.intro && (
-                <p style={{ marginTop: '1rem', fontSize: 'clamp(1rem, 1.4vw, 1.1rem)', color: 'rgba(255,255,255,0.7)', maxWidth: '600px', lineHeight: 1.6 }}>
-                  {location.intro}
-                </p>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div style={{ padding: 'clamp(4rem, 8vw, 7rem) clamp(1.5rem, 4vw, 3rem) 3rem' }}>
-            {location.county && (
-              <p style={{ fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--orange)', marginBottom: '1rem' }}>
-                {location.county}
-              </p>
-            )}
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: 'clamp(2.5rem, 6vw, 5rem)',
-              lineHeight: 1.05,
-              color: '#fff',
-            }}>
-              Web Design {location.town}<span style={{ color: 'var(--orange)' }}>.</span>
-            </h1>
-            {location.intro && (
-              <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '600px', lineHeight: 1.7 }}>
-                {location.intro}
-              </p>
-            )}
-          </div>
-        )}
-      </section>
+      {/* Hero — same cycling effect but static for this town */}
+      <LocationHero
+        prefix="Web design in"
+        words={[location.town]}
+        staticWord={location.town}
+        intro={location.intro || `Professional web design and digital marketing services in ${location.town}, ${location.county || 'Hertfordshire'}.`}
+      />
 
       {/* Body content */}
-      {location.body && (
+      {location.body && typeof location.body === 'string' && location.body.trim() && (
         <section className="section" style={{ background: 'var(--bg)' }}>
           <div style={{ maxWidth: '720px', lineHeight: 1.9, color: 'rgba(255,255,255,0.8)', fontSize: '1.05rem' }}
-            dangerouslySetInnerHTML={{ __html: typeof location.body === 'string' ? location.body : '' }}
+            dangerouslySetInnerHTML={{ __html: location.body }}
           />
         </section>
       )}
@@ -124,8 +73,11 @@ export default async function LocationPage({ params }: Props) {
                 letterSpacing: '0.05em',
                 textTransform: 'uppercase',
                 textDecoration: 'none',
-                transition: 'background 0.2s',
-              }}>
+                transition: 'background 0.2s, border-color 0.2s',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,128,0,0.2)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,128,0,0.1)' }}
+              >
                 {service}
               </Link>
             ))}
@@ -133,10 +85,8 @@ export default async function LocationPage({ params }: Props) {
         </section>
       )}
 
-      {/* Our Work */}
-      {workItems.length > 0 && (
-        <WorkGrid items={workItems} showTitle />
-      )}
+      {/* Our work — same grid as homepage */}
+      {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
 
       {/* Contact */}
       <Contact phone={settings?.phone} email={settings?.email} />
