@@ -86,7 +86,7 @@ button { cursor: none; font-family: var(--font-body); }
 .nav-logo {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(1.6rem, 2.5vw, 2rem);
+  font-size: 3rem;
   color: #fff;
   letter-spacing: -0.02em;
   text-decoration: none;
@@ -125,15 +125,15 @@ button { cursor: none; font-family: var(--font-body); }
 }
 .nav-cta:hover { background: #fff; color: #111; }
 .nav-hamburger {
-  background: none;
-  border: 1.5px solid #fff;
-  padding: 0.65rem 1.4rem;
-  color: #fff;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  padding: 0.85rem 1.4rem;
+  border: 1.5px solid #fff;
+  color: #333;
+  background: #FE7F00;
   transition: background 0.2s, color 0.2s;
   line-height: 1;
 }
@@ -569,4 +569,10 @@ button { cursor: none; font-family: var(--font-body); }
 /* ─── Responsive ─────────────────────────────────────── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
+}
+
+@keyframes scrollPulse {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
 }

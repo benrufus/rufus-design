@@ -50,6 +50,31 @@ export default function Hero({ words = DEFAULT_WORDS, intro }: HeroProps) {
           <Link href="/work" className="btn-secondary">Our work</Link>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <div style={{
+        position: 'absolute',
+        bottom: '2.5rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.5rem',
+      }}>
+        <span style={{
+          fontSize: '0.6rem',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.3)',
+        }}>Scroll</span>
+        <div style={{
+          width: '1px',
+          height: '60px',
+          background: 'linear-gradient(to bottom, rgba(255,128,0,0.8), transparent)',
+          animation: 'scrollPulse 1.8s ease-in-out infinite',
+        }} />
+      </div>
     </section>
   )
 }
