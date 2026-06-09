@@ -642,3 +642,10 @@ button { cursor: none; font-family: var(--font-body); }
 .cms-wrap .cursor-ring {
   display: none !important;
 }
+
+/* Sections block the grid canvas */
+.section {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+}
