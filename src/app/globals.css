@@ -79,7 +79,7 @@ button { cursor: none; font-family: var(--font-body); }
   transition: background 0.3s, border-color 0.3s;
 }
 .nav.scrolled {
-  background: rgba(17,17,17,0.92);
+  background: rgba(17,17,17,0.95);
   backdrop-filter: blur(12px);
   border-color: var(--border);
 }
@@ -162,6 +162,7 @@ button { cursor: none; font-family: var(--font-body); }
   color: #fff;
   transition: color 0.2s;
   display: block;
+  text-decoration: none;
 }
 .fullscreen-menu a:hover { color: var(--orange); }
 .menu-dog {
