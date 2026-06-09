@@ -637,3 +637,8 @@ button { cursor: none; font-family: var(--font-body); }
 .cms-wrap .toast { position: fixed; bottom: 2rem; right: 2rem; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.875rem 1.25rem; font-size: 0.875rem; z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,0.4); min-width: auto; }
 .cms-wrap .toast-success { border-left: 3px solid #4ade80; color: #fff; background: #1a1a1a; }
 .cms-wrap .toast-error { border-left: 3px solid #f87171; color: #fff; background: #1a1a1a; }
+.cms-wrap .grid-canvas-wrap,
+.cms-wrap .cursor-dot,
+.cms-wrap .cursor-ring {
+  display: none !important;
+}
