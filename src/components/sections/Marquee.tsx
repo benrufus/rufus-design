@@ -1,9 +1,15 @@
-const DEFAULT_ITEMS = ['Web Design', 'SEO', 'PPC', 'Digital Marketing', 'WordPress', 'Branding', 'Analytics', 'Managed Hosting']
+'use client'
+interface MarqueeItem { id: string; text: string; sort_order: number; active: boolean }
+interface MarqueeProps { items?: MarqueeItem[] }
 
-interface MarqueeProps { items?: string[] }
+const DEFAULT_ITEMS = [
+  'Web Design', 'SEO', 'PPC', 'Digital Marketing',
+  'WordPress', 'Branding', 'Analytics', 'Managed Hosting'
+]
 
-export default function Marquee({ items = DEFAULT_ITEMS }: MarqueeProps) {
-  const doubled = [...items, ...items]
+export default function Marquee({ items }: MarqueeProps) {
+  const labels = items?.length ? items.map(i => i.text) : DEFAULT_ITEMS
+  const doubled = [...labels, ...labels]
   return (
     <div className="marquee-wrap">
       <div className="marquee-track">
