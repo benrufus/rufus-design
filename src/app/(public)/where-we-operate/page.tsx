@@ -1,65 +1,94 @@
-import { Metadata } from 'next'
-import { client, LOCATIONS_QUERY } from '@/lib/sanity'
-import Nav from '@/components/layout/Nav'
-import Footer from '@/components/layout/Footer'
-import Hero from '@/components/sections/Hero'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import Contact from '@/components/sections/Contact'
-import LocationCard from '@/components/ui/LocationCard'
+import LocationHero from '@/components/ui/LocationHero'
+import { getLocations, getSiteSettings } from '@/lib/db'
 
 export const metadata: Metadata = {
-  title: 'Where We Operate',
-  description: 'Rufus Design provides web design and digital marketing services across Hertfordshire and London, including Berkhamsted, Tring, Hemel Hempstead, St Albans, Watford and more.',
+  title: 'Where We Operate | Rufus Design',
+  description: 'Rufus Design provides web design and digital marketing across Hertfordshire, Buckinghamshire and beyond.',
   alternates: { canonical: '/where-we-operate' },
 }
-export const revalidate = 60
-
-const FALLBACK_LOCATIONS = [
-  { town: 'Berkhamsted', county: 'Hertfordshire', slug: { current: 'berkhamsted' } },
-  { town: 'Tring', county: 'Hertfordshire', slug: { current: 'tring' } },
-  { town: 'Hemel Hempstead', county: 'Hertfordshire', slug: { current: 'hemel-hempstead' } },
-  { town: 'St Albans', county: 'Hertfordshire', slug: { current: 'st-albans' } },
-  { town: 'Watford', county: 'Hertfordshire', slug: { current: 'watford' } },
-  { town: 'Aylesbury', county: 'Buckinghamshire', slug: { current: 'aylesbury' } },
-  { town: 'Harpenden', county: 'Hertfordshire', slug: { current: 'harpenden' } },
-  { town: 'Chesham', county: 'Buckinghamshire', slug: { current: 'chesham' } },
-  { town: 'London', county: 'London', slug: { current: 'london' } },
-]
+export const revalidate = 0
 
 export default async function WhereWeOperatePage() {
-  const locations = await client.fetch(LOCATIONS_QUERY).catch(() => [])
-  const list = locations.length ? locations : FALLBACK_LOCATIONS
+  let locationList: any[] = []
+  let settings: any = {}
 
-  // Use town names as the cycling words in the hero
-  const townWords = list.map((l: { town: string }) => l.town)
+  try {
+    const [locations, siteSettings] = await Promise.allSettled([
+      getLocations(), getSiteSettings(),
+    ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+    locationList = (locations as any[]) || []
+    settings = (siteSettings as any) || {}
+  } catch {
+    // render with defaults if db fails
+  }
+
+  const townNames = locationList.length > 0
+    ? locationList.map((l: any) => l.town).filter(Boolean)
+    : ['Berkhamsted', 'Hemel Hempstead', 'St Albans', 'Harpenden', 'Tring']
 
   return (
     <>
-      <Nav />
-      <main>
-        <Hero
-          words={townWords}
-          subtext="Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire and London. Click your area to find out more."
-          cta1="Let's talk"
-          cta2="Our work"
-        />
+      <LocationHero
+        prefix="Web design in"
+        words={townNames}
+        intro="Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK."
+      />
 
-        <section style={{ padding: 'clamp(3rem,6vw,6rem) clamp(1.5rem,4vw,3rem)', background: 'var(--bg)' }}>
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ff8000', marginBottom: '1.25rem' }}>
-            Service areas
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-raleway)', fontWeight: 800, fontSize: 'clamp(2rem,5vw,4rem)', letterSpacing: '-0.03em', marginBottom: '3rem' }}>
-            Where we work<span style={{ color: '#ff8000' }}>.</span>
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-            {list.map((loc: { _id?: string; town: string; county: string; slug: { current: string }; heroImage?: object; intro?: string; services?: string[] }) => (
-              <LocationCard key={loc._id || loc.town} loc={loc} />
+      <section className="section" style={{ background: 'var(--bg2)' }}>
+        <p className="section-label">Our locations</p>
+        <h2 className="section-title">Where we work<span className="dot">.</span></h2>
+
+        {locationList.length > 0 ? (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1px',
+            background: 'var(--border)',
+            border: '1px solid var(--border)',
+            marginTop: '3rem',
+          }}>
+            {locationList.map((loc: any) => (
+              <Link key={loc.id} href={`/where-we-operate/${loc.slug}`} style={{ textDecoration: 'none' }}>
+                <div style={{ background: 'var(--bg)', padding: '2rem', height: '100%', transition: 'background 0.3s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,128,0,0.06)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'var(--bg)')}
+                >
+                  {loc.hero_image && (
+                    <div style={{ aspectRatio: '16/9', overflow: 'hidden', marginBottom: '1.25rem' }}>
+                      <img src={loc.hero_image} alt={loc.town} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                  <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.3rem', color: '#fff', marginBottom: '0.25rem' }}>
+                    {loc.town}
+                  </h2>
+                  {loc.county && (
+                    <p style={{ fontSize: '0.7rem', color: 'var(--orange)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                      {loc.county}
+                    </p>
+                  )}
+                  {loc.intro && (
+                    <p style={{ fontSize: '0.875rem', color: 'var(--muted)', lineHeight: 1.6 }}>
+                      {loc.intro.length > 100 ? loc.intro.slice(0, 100) + '…' : loc.intro}
+                    </p>
+                  )}
+                  <p style={{ marginTop: '1.25rem', fontSize: '0.75rem', color: 'var(--orange)', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+                    Web design in {loc.town} →
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
+        ) : (
+          <p style={{ color: 'var(--muted)', marginTop: '2rem' }}>
+            No locations added yet. Add them in the CMS.
+          </p>
+        )}
+      </section>
 
-        <Contact />
-      </main>
-      <Footer />
+      <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
 }
