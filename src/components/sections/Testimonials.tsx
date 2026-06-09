@@ -26,7 +26,7 @@ export default function Testimonials({ items }: TestimonialsProps) {
   const t = list[current]
 
   return (
-    <section className="section" ref={ref as React.RefObject<HTMLElement>}>
+    <section className="section" ref={ref as React.RefObject<HTMLElement>} style={{ background: 'var(--bg)' }}>
       <div className={`reveal${visible ? ' visible' : ''}`} style={{ marginBottom: '3rem' }}>
         <p className="section-label">What clients say</p>
         <h2 className="section-title">Testimonials<span className="dot">.</span></h2>

@@ -2,7 +2,6 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // Skip if env vars not set (avoids crash during initial setup)
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.next()
   }
@@ -25,8 +24,25 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
   const path = request.nextUrl.pathname
+
+  // Check redirects table first (for all non-CMS routes)
+  if (!path.startsWith('/760') && !path.startsWith('/api') && !path.startsWith('/_next')) {
+    const { data: redirect } = await supabase
+      .from('redirects')
+      .select('destination, type')
+      .eq('source', path)
+      .eq('active', true)
+      .single()
+
+    if (redirect) {
+      const dest = request.nextUrl.clone()
+      dest.pathname = redirect.destination
+      return NextResponse.redirect(dest, { status: redirect.type || 301 })
+    }
+  }
+
+  const { data: { user } } = await supabase.auth.getUser()
 
   // Protect all /760 routes except /760/login
   if (path.startsWith('/760') && path !== '/760/login') {
@@ -48,5 +64,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/760/:path*'],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|icon.png).*)',
+  ],
 }
