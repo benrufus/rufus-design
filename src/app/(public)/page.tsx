@@ -25,13 +25,13 @@ export default async function HomePage() {
     <>
       <Hero
         words={(homePage as any)?.hero_words || undefined}
-        intro={(homePage as any)?.hero_intro || undefined}
+        intro={(homePage as any)?.hero_subtext || undefined}
       />
-      <Marquee items={(marqueeItems as any[])?.map((m: any) => m.label) || undefined} />
+      <Marquee items={(marqueeItems as any[]) || undefined} />
       <WorkGrid items={(work as any[]) || []} showTitle />
       <Services services={(services as any[]) || undefined} />
       <About
-        headline={(homePage as any)?.about_headline || undefined}
+        headline={(homePage as any)?.about_heading || undefined}
         body={(homePage as any)?.about_body || undefined}
         stats={(stats as any[]) || undefined}
       />
