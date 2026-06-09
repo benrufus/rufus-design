@@ -1,95 +1,138 @@
-import type { Metadata } from 'next'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import WorkGrid from '@/components/sections/WorkGrid'
+import { client, LOCATIONS_QUERY, LOCATION_SLUG_QUERY, urlFor } from '@/lib/sanity'
+import { PortableText, PortableTextComponents } from 'next-sanity'
+import Nav from '@/components/layout/Nav'
+import Footer from '@/components/layout/Footer'
+import Hero from '@/components/sections/Hero'
 import Contact from '@/components/sections/Contact'
-import LocationHero from '@/components/ui/LocationHero'
-import { getLocationBySlug, getWork, getSiteSettings } from '@/lib/db'
+import WorkGrid from '@/components/sections/WorkGrid'
+import { WORK_QUERY } from '@/lib/sanity'
 
-export const revalidate = 0
+type Props = { params: Promise<{ slug: string }> }
 
-interface Props { params: Promise<{ slug: string }> }
+export async function generateStaticParams() {
+  const locs = await client.fetch(LOCATIONS_QUERY).catch(() => [])
+  return locs.map((l: { slug: { current: string } }) => ({ slug: l.slug.current }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const loc = await getLocationBySlug(slug).catch(() => null)
+  const loc = await client.fetch(LOCATION_SLUG_QUERY, { slug }).catch(() => null)
   if (!loc) return {}
   return {
-    title: loc.meta_title || `Web Design ${loc.town} | Rufus Design`,
-    description: loc.meta_description || `Professional web design and digital marketing in ${loc.town}, ${loc.county}. Rufus Design — Est. 2007.`,
+    title: loc.seo?.metaTitle || `Web Design ${loc.town} | Rufus Design`,
+    description: loc.seo?.metaDescription || `Rufus Design provides web design and digital marketing services in ${loc.town}, ${loc.county}.`,
     alternates: { canonical: `/where-we-operate/${slug}` },
   }
 }
 
+export const revalidate = 60
+
+const components: PortableTextComponents = {
+  block: {
+    h2: ({ children }) => <h2 style={{ fontFamily: 'var(--font-raleway)', fontWeight: 800, fontSize: 'clamp(1.4rem,3vw,2rem)', letterSpacing: '-0.02em', margin: '2.5rem 0 1rem', color: '#fff' }}>{children}</h2>,
+    h3: ({ children }) => <h3 style={{ fontFamily: 'var(--font-raleway)', fontWeight: 700, fontSize: '1.15rem', margin: '2rem 0 0.75rem', color: '#fff' }}>{children}</h3>,
+    normal: ({ children }) => <p style={{ marginBottom: '1.4rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.85 }}>{children}</p>,
+    blockquote: ({ children }) => <blockquote style={{ borderLeft: '3px solid #ff8000', paddingLeft: '1.5rem', margin: '2rem 0', fontStyle: 'italic', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>{children}</blockquote>,
+  },
+  marks: {
+    strong: ({ children }) => <strong style={{ color: '#fff', fontWeight: 700 }}>{children}</strong>,
+    link: ({ value, children }) => <a href={value?.href} target={value?.blank ? '_blank' : undefined} rel="noopener noreferrer" style={{ color: '#ff8000', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{children}</a>,
+  },
+  types: {
+    image: ({ value }) => (
+      <figure style={{ margin: '2rem 0' }}>
+        <img src={urlFor(value).width(800).url()} alt={value.alt || ''} style={{ width: '100%', display: 'block' }} />
+        {value.caption && <figcaption style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', marginTop: '0.5rem', textAlign: 'center' }}>{value.caption}</figcaption>}
+      </figure>
+    ),
+  },
+}
+
+// Services that cycle in the hero for each location page
+const SERVICE_WORDS = ['Web Design', 'Development', 'SEO & PPC', 'Branding', 'IT Support']
+
 export default async function LocationPage({ params }: Props) {
   const { slug } = await params
-  const [loc, work, siteSettings] = await Promise.allSettled([
-    getLocationBySlug(slug),
-    getWork(),
-    getSiteSettings(),
-  ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+
+  const [loc, workItems] = await Promise.all([
+    client.fetch(LOCATION_SLUG_QUERY, { slug }).catch(() => null),
+    client.fetch(WORK_QUERY).catch(() => []),
+  ])
 
   if (!loc) notFound()
 
-  const location = loc as any
-  const workItems = (work as any[]) || []
-  const settings = siteSettings as any
+  // Hero words: town name first, then services cycle
+  const heroWords = [loc.town, ...SERVICE_WORDS]
 
   return (
     <>
-      {/* Hero — same cycling effect but static for this town */}
-      <LocationHero
-        prefix="Web design in"
-        words={[location.town]}
-        staticWord={location.town}
-        intro={location.intro || `Professional web design and digital marketing services in ${location.town}, ${location.county || 'Hertfordshire'}.`}
-      />
+      <Nav />
+      <main>
+        {/* Hero — cycles town name then services */}
+        <Hero
+          words={heroWords}
+          subtext={loc.intro || `Professional web design and digital marketing services in ${loc.town}, ${loc.county}.`}
+          cta1="Let's talk"
+          cta2="Our work"
+        />
 
-      {/* Body content */}
-      {location.body && typeof location.body === 'string' && location.body.trim() && (
-        <section className="section" style={{ background: 'var(--bg)' }}>
-          <div style={{ maxWidth: '720px', lineHeight: 1.9, color: 'rgba(255,255,255,0.8)', fontSize: '1.05rem' }}
-            dangerouslySetInnerHTML={{ __html: location.body }}
-          />
-        </section>
-      )}
+        {/* Services tags */}
+        {loc.services?.length > 0 && (
+          <section style={{
+            padding: '3rem clamp(1.5rem,4vw,3rem)',
+            background: 'var(--bg)',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+          }}>
+            <p style={{ fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ff8000', marginBottom: '1.25rem' }}>
+              Services in {loc.town}
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {loc.services.map((s: string) => (
+                <a key={s} href="/contact" style={{
+                  display: 'inline-block',
+                  padding: '0.6rem 1.25rem',
+                  background: 'rgba(255,128,0,0.1)',
+                  border: '1px solid rgba(255,128,0,0.25)',
+                  color: '#ff8000',
+                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-raleway)',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                }}>
+                  {s}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
-      {/* Services offered in this area */}
-      {location.services?.length > 0 && (
-        <section className="section" style={{ background: 'var(--bg2)' }}>
-          <p className="section-label">What we offer in {location.town}</p>
-          <h2 className="section-title">Our services<span className="dot">.</span></h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '2rem' }}>
-            {location.services.map((service: string) => (
-              <Link key={service} href="/contact" style={{
-                display: 'inline-block',
-                padding: '0.6rem 1.25rem',
-                background: 'rgba(255,128,0,0.1)',
-                border: '1px solid rgba(255,128,0,0.25)',
-                color: 'var(--orange)',
-                fontSize: '0.8rem',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                transition: 'background 0.2s, border-color 0.2s',
-              }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,128,0,0.2)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,128,0,0.1)' }}
-              >
-                {service}
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+        {/* Body content */}
+        {loc.body?.length > 0 && (
+          <article style={{ padding: '3rem clamp(1.5rem,4vw,3rem) 4rem', maxWidth: '780px' }}>
+            <PortableText value={loc.body} components={components} />
+            <a href="/contact" className="btn-primary" style={{ display: 'inline-block', marginTop: '2rem' }}>
+              Get in touch
+            </a>
+          </article>
+        )}
 
-      {/* Our work — same grid as homepage */}
-      {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
+        {/* Our work */}
+        {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
 
-      {/* Contact */}
-      <Contact phone={settings?.phone} email={settings?.email} />
+        {/* Back link */}
+        <div style={{ padding: '0 clamp(1.5rem,4vw,3rem) 2rem' }}>
+          <a href="/where-we-operate" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', transition: 'color 0.25s', textDecoration: 'none' }}>
+            ← All areas
+          </a>
+        </div>
+
+        <Contact />
+      </main>
+      <Footer />
     </>
   )
 }
