@@ -125,15 +125,15 @@ button { cursor: none; font-family: var(--font-body); }
 }
 .nav-cta:hover { background: #fff; color: #111; }
 .nav-hamburger {
-  background: none;
-  border: 1.5px solid #fff;
-  padding: 0.65rem 1.4rem;
-  color: #fff;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  padding: 0.65rem 1.4rem;
+  border: 1.5px solid #fff;
+  color: #fff;
+  background: transparent;
   transition: background 0.2s, color 0.2s;
   line-height: 1;
 }
