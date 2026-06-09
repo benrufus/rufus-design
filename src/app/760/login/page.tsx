@@ -40,7 +40,7 @@ export default function LoginPage() {
             Rufus<span style={{ color: '#ff8000' }}>.</span>
           </div>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.4rem' }}>
-            Content Manager
+            SPIDERMAN
           </p>
         </div>
 
