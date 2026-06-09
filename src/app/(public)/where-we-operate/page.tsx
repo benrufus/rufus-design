@@ -12,27 +12,36 @@ export const metadata: Metadata = {
 export const revalidate = 0
 
 export default async function WhereWeOperatePage() {
-  const [locations, siteSettings] = await Promise.allSettled([
-    getLocations(), getSiteSettings(),
-  ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+  let locationList: any[] = []
+  let settings: any = {}
 
-  const locationList = (locations as any[]) || []
-  const settings = siteSettings as any
+  try {
+    const [locations, siteSettings] = await Promise.allSettled([
+      getLocations(), getSiteSettings(),
+    ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+    locationList = (locations as any[]) || []
+    settings = (siteSettings as any) || {}
+  } catch {
+    // render with defaults if db fails
+  }
+
+  const townNames = locationList.length > 0
+    ? locationList.map((l: any) => l.town).filter(Boolean)
+    : ['Berkhamsted', 'Hemel Hempstead', 'St Albans', 'Harpenden', 'Tring']
 
   return (
     <>
       <LocationHero
-        prefix="Web design for"
-        words={locationList.length > 0
-          ? locationList.map((l: any) => l.town)
-          : ['Berkhamsted', 'Hemel Hempstead', 'St Albans', 'Harpenden', 'Tring']}
+        prefix="Web design in"
+        words={townNames}
         intro="Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK."
       />
 
-      {locationList.length > 0 && (
-        <section className="section" style={{ background: 'var(--bg2)' }}>
-          <p className="section-label">Our locations</p>
-          <h2 className="section-title">Where we work<span className="dot">.</span></h2>
+      <section className="section" style={{ background: 'var(--bg2)' }}>
+        <p className="section-label">Our locations</p>
+        <h2 className="section-title">Where we work<span className="dot">.</span></h2>
+
+        {locationList.length > 0 ? (
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
@@ -43,14 +52,7 @@ export default async function WhereWeOperatePage() {
           }}>
             {locationList.map((loc: any) => (
               <Link key={loc.id} href={`/where-we-operate/${loc.slug}`} style={{ textDecoration: 'none' }}>
-                <div style={{
-                  background: 'var(--bg)',
-                  padding: '2rem',
-                  transition: 'background 0.3s',
-                  height: '100%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
+                <div style={{ background: 'var(--bg)', padding: '2rem', height: '100%', transition: 'background 0.3s' }}
                   onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,128,0,0.06)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'var(--bg)')}
                 >
@@ -72,15 +74,19 @@ export default async function WhereWeOperatePage() {
                       {loc.intro.length > 100 ? loc.intro.slice(0, 100) + '…' : loc.intro}
                     </p>
                   )}
-                  <p style={{ marginTop: '1.25rem', fontSize: '0.75rem', color: 'var(--orange)', fontFamily: 'var(--font-heading)', fontWeight: 700, letterSpacing: '0.05em' }}>
+                  <p style={{ marginTop: '1.25rem', fontSize: '0.75rem', color: 'var(--orange)', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
                     Web design in {loc.town} →
                   </p>
                 </div>
               </Link>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p style={{ color: 'var(--muted)', marginTop: '2rem' }}>
+            No locations added yet. Add them in the CMS.
+          </p>
+        )}
+      </section>
 
       <Contact phone={settings?.phone} email={settings?.email} />
     </>
