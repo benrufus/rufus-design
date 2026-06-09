@@ -86,7 +86,7 @@ button { cursor: none; font-family: var(--font-body); }
 .nav-logo {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 2rem;
+  font-size: 3rem;
   color: #fff;
   letter-spacing: -0.02em;
   text-decoration: none;
