@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'Award-winning web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
   alternates: { canonical: '/' },
 }
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function HomePage() {
   const [homePage, work, posts, testimonials, services, stats, marqueeItems, contactForm, siteSettings] = await Promise.allSettled([
