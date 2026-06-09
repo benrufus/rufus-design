@@ -130,7 +130,7 @@ button { cursor: none; font-family: var(--font-body); }
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 0.65rem 1.4rem;
+  padding: 0.85rem 1.4rem;
   border: 1.5px solid #fff;
   color: #333;
   background: #FE7F00;
