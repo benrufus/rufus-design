@@ -168,9 +168,9 @@ button { cursor: none; font-family: var(--font-body); }
 .menu-dog {
   position: absolute;
   bottom: 3rem;
-  right: 3rem;
+  right: 0rem;
   font-size: 3rem;
-  animation: dogBounce 1s ease-in-out infinite;
+  animation: dogBounce 2s ease-in-out infinite;
 }
 @keyframes dogBounce {
   0%, 100% { transform: translateY(0) rotate(0deg); }
