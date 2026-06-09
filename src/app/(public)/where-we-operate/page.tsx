@@ -1,56 +1,53 @@
-import { Metadata } from 'next'
-import { client, LOCATIONS_QUERY } from '@/lib/sanity'
-import Nav from '@/components/layout/Nav'
-import Footer from '@/components/layout/Footer'
-import Hero from '@/components/sections/Hero'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import Contact from '@/components/sections/Contact'
-import LocationCard from '@/components/ui/LocationCard'
+import { getLocations, getSiteSettings } from '@/lib/db'
 
 export const metadata: Metadata = {
-  title: 'Where We Operate',
-  description: 'Rufus Design provides web design and digital marketing services across Hertfordshire and London, including Berkhamsted, Tring, Hemel Hempstead, St Albans, Watford and more.',
+  title: 'Where We Operate | Rufus Design',
+  description: 'Web design across Hertfordshire, Buckinghamshire and beyond.',
   alternates: { canonical: '/where-we-operate' },
 }
-export const revalidate = 60
-
-const FALLBACK_LOCATIONS = [
-  { town: 'Berkhamsted', county: 'Hertfordshire', slug: { current: 'berkhamsted' } },
-  { town: 'Tring', county: 'Hertfordshire', slug: { current: 'tring' } },
-  { town: 'Hemel Hempstead', county: 'Hertfordshire', slug: { current: 'hemel-hempstead' } },
-  { town: 'St Albans', county: 'Hertfordshire', slug: { current: 'st-albans' } },
-  { town: 'Watford', county: 'Hertfordshire', slug: { current: 'watford' } },
-  { town: 'Aylesbury', county: 'Buckinghamshire', slug: { current: 'aylesbury' } },
-  { town: 'Harpenden', county: 'Hertfordshire', slug: { current: 'harpenden' } },
-  { town: 'Chesham', county: 'Buckinghamshire', slug: { current: 'chesham' } },
-  { town: 'London', county: 'London', slug: { current: 'london' } },
-]
+export const revalidate = 0
 
 export default async function WhereWeOperatePage() {
-  const locations = await client.fetch(LOCATIONS_QUERY).catch(() => [])
-  const list = locations.length ? locations : FALLBACK_LOCATIONS
-
-  const townNames = list.map((l: { town: string }) => l.town)
+  let locationList: any[] = []
+  let settings: any = {}
+  try {
+    const [locations, siteSettings] = await Promise.allSettled([
+      getLocations(), getSiteSettings(),
+    ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+    locationList = (locations as any[]) || []
+    settings = (siteSettings as any) || {}
+  } catch { /* fallback */ }
 
   return (
     <>
-      <Nav />
-      <main>
-        <Hero
-          words={townNames}
-          subtext="Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire and London. Click your area to find out more."
-          cta1="Let's talk"
-          cta2="Our work"
-        />
-        <section style={{ padding: 'clamp(3rem,6vw,6rem) clamp(1.5rem,4vw,3rem)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-            {list.map((loc: { _id?: string; town: string; county: string; slug: { current: string }; heroImage?: object; intro?: string; services?: string[] }) => (
-              <LocationCard key={loc._id || loc.town} loc={loc} />
+      <section className="page-hero" style={{ background: 'var(--bg)' }}>
+        <p className="page-hero-label">Where we work</p>
+        <h1>Where we operate<span className="dot">.</span></h1>
+        <p className="page-hero-intro">Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK.</p>
+      </section>
+
+      <section className="section" style={{ background: 'var(--bg2)' }}>
+        {locationList.length > 0 ? (
+          <div className="services-grid">
+            {locationList.map((loc: any) => (
+              <Link key={loc.id} href={`/where-we-operate/${loc.slug}`} style={{ textDecoration: 'none' }}>
+                <div className="service-card">
+                  <p className="service-num">{loc.county}</p>
+                  <h2 className="service-name">{loc.town}</h2>
+                  {loc.intro && <p className="service-desc">{loc.intro.slice(0, 100)}…</p>}
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
-        <Contact />
-      </main>
-      <Footer />
+        ) : (
+          <p style={{ color: 'var(--muted)' }}>No locations added yet.</p>
+        )}
+      </section>
+
+      <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
 }
