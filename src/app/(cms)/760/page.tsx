@@ -1,41 +1,47 @@
 'use client'
 import Link from 'next/link'
 
-export default function CmsDashboard() {
-  const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+const QUICK_LINKS = [
+  { href: '/760/home', icon: '🏠', label: 'Edit Home Page', desc: 'Hero text, services, about section' },
+  { href: '/760/work', icon: '💼', label: 'Add / Edit Projects', desc: 'Case studies and portfolio' },
+  { href: '/760/news', icon: '📰', label: 'Write a News Post', desc: 'Blog articles and updates' },
+  { href: '/760/testimonials', icon: '⭐', label: 'Edit Testimonials', desc: 'Client reviews and quotes' },
+  { href: '/760/about', icon: '👋', label: 'Edit About Page', desc: 'Team, values, company info' },
+  { href: '/760/settings', icon: '⚙️', label: 'Site Settings', desc: 'Phone, email, social links' },
+]
 
-  const tiles = [
-    { href: '/760/home', icon: '🏠', label: 'Home Page', desc: 'Hero words, services, about text' },
-    { href: '/760/work', icon: '🗂️', label: 'Work / Projects', desc: 'Add and manage case studies' },
-    { href: '/760/news', icon: '📰', label: 'News / Blog', desc: 'Write and publish posts' },
-    { href: '/760/testimonials', icon: '⭐', label: 'Testimonials', desc: 'Manage client reviews' },
-    { href: '/760/about', icon: '👋', label: 'About Page', desc: 'Team, values and stats' },
-    { href: '/760/locations', icon: '📍', label: 'Where We Operate', desc: 'Location pages' },
-    { href: '/760/contact', icon: '📬', label: 'Contact Form', desc: 'Edit form fields' },
-    { href: '/760/settings', icon: '⚙️', label: 'Site Settings', desc: 'Phone, email, socials' },
-    { href: '/760/seo', icon: '🔍', label: 'SEO & Analytics', desc: 'GA4, GTM, meta tags' },
-  ]
-
+export default function DashboardPage() {
+  const supabase = createClient()
   return (
-    <>
-      <div className="cms-header">
-        <h1>{greeting}<span style={{ color: 'var(--orange)' }}>.</span></h1>
-        <p>Rufus Design — Content Manager</p>
+    <div style={{ padding: '2.5rem' }}>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
+          Good morning<span style={{ color: '#ff8000' }}>.</span>
+        </h1>
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem' }}>
+          What would you like to update today?
+        </p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
-        {tiles.map(t => (
-          <Link key={t.href} href={t.href} style={{ display: 'block', textDecoration: 'none' }}>
-            <div className="cms-card" style={{ cursor: 'pointer', transition: 'border-color 0.2s', marginBottom: 0 }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,128,0,0.4)')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{t.icon}</div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#fff', marginBottom: '0.3rem' }}>{t.label}</div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)' }}>{t.desc}</div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+        {QUICK_LINKS.map(link => (
+          <Link key={link.href} href={link.href} style={{ textDecoration: 'none' }}>
+            <div className="card" style={{ transition: 'border-color 0.2s, transform 0.2s', cursor: 'pointer' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#ff8000'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}>
+              <div style={{ fontSize: '1.75rem', marginBottom: '0.75rem' }}>{link.icon}</div>
+              <h3 style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.25rem' }}>{link.label}</h3>
+              <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{link.desc}</p>
             </div>
           </Link>
         ))}
       </div>
-    </>
+
+      <div className="card" style={{ marginTop: '2rem', background: 'rgba(255,128,0,0.08)', borderColor: 'rgba(255,128,0,0.2)' }}>
+        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
+          <strong style={{ color: '#ff8000' }}>💡 Tip:</strong> Changes save to your database instantly. Your live site updates within 60 seconds automatically.
+        </p>
+      </div>
+    </div>
   )
 }

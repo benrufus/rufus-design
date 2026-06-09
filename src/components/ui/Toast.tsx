@@ -1,29 +1,28 @@
 'use client'
 import { createContext, useContext, useState, useCallback } from 'react'
 
-interface Toast { id: number; message: string; type: 'success' | 'error' | 'info' }
-interface ToastCtx { toast: (message: string, type?: Toast['type']) => void }
-
-const ToastContext = createContext<ToastCtx>({ toast: () => {} })
-export const useToast = () => useContext(ToastContext)
+type Toast = { id: number; message: string; type: 'success' | 'error' }
+const ToastContext = createContext<{ show: (msg: string, type?: 'success' | 'error') => void }>({ show: () => {} })
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
-
-  const toast = useCallback((message: string, type: Toast['type'] = 'success') => {
+  const show = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     const id = Date.now()
     setToasts(t => [...t, { id, message, type }])
-    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500)
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3000)
   }, [])
-
   return (
-    <ToastContext.Provider value={{ toast }}>
+    <ToastContext.Provider value={{ show }}>
       {children}
-      <div className="toast-wrap">
+      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {toasts.map(t => (
-          <div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>
+          <div key={t.id} className={`toast toast-${t.type}`}>
+            {t.type === 'success' ? '✓' : '✕'} {t.message}
+          </div>
         ))}
       </div>
     </ToastContext.Provider>
   )
 }
+
+export const useToast = () => useContext(ToastContext)

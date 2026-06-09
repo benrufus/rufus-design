@@ -1,105 +1,119 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from "@/lib/supabase/client"
 import { useToast } from '@/components/ui/Toast'
 import ImageUpload from '@/components/ui/ImageUpload'
+import RichTextEditor from '@/components/ui/RichTextEditor'
 
-export default function CmsLocationsPage() {
-  const [items, setItems] = useState<any[]>([])
-  const [selected, setSelected] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+interface Location { id: string; town: string; slug: string; county: string; hero_image: string; intro: string; body: string; services: string[]; featured: boolean; meta_title: string; meta_description: string }
+
+const ALL_SERVICES = ['Web Design', 'Web Development', 'SEO', 'PPC', 'Managed Hosting', 'Branding', 'Data Analytics']
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
+export default function LocationsPage() {
   const supabase = createClient()
-  const { toast } = useToast()
+  const { show } = useToast()
+  const [locations, setLocations] = useState<Location[]>([])
+  const [editing, setEditing] = useState<Location | null>(null)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    supabase.from('locations').select('*').order('town')
-      .then(({ data }) => { setItems(data || []); setLoading(false) })
+    supabase.from('locations').select('*').order('sort_order').then(({ data }) => { if (data) setLocations(data) })
   }, [])
 
-  function upd(k: string, v: any) { setSelected((s: any) => ({ ...s, [k]: v })) }
-
-  async function save() {
+  const save = async () => {
+    if (!editing) return
     setSaving(true)
-    const { error } = selected.id
-      ? await supabase.from('locations').update(selected).eq('id', selected.id)
-      : await supabase.from('locations').insert(selected)
-    if (!error) {
-      const { data } = await supabase.from('locations').select('*').order('town')
-      setItems(data || [])
-      toast('Saved!')
-    } else { toast(error.message, 'error') }
+    if (editing.id.startsWith('new-')) {
+      const { data, error } = await supabase.from('locations').insert({ ...editing, id: undefined }).select().single()
+      if (error) { show('Error: ' + error.message, 'error'); setSaving(false); return }
+      setLocations(ls => [...ls.filter(l => l.id !== editing.id), data])
+      setEditing(data)
+      show('Location created!', 'success')
+    } else {
+      const { error } = await supabase.from('locations').update(editing).eq('id', editing.id)
+      setLocations(ls => ls.map(l => l.id === editing.id ? editing : l))
+      show(error ? 'Error saving' : 'Saved!', error ? 'error' : 'success')
+    }
     setSaving(false)
   }
 
-  async function add() {
-    setSelected({ town: 'New Town', county: 'Hertfordshire', slug: `new-town-${Date.now()}`, published: false })
-  }
-
-  async function remove(id: string) {
+  const remove = async (id: string) => {
     if (!confirm('Delete this location?')) return
     await supabase.from('locations').delete().eq('id', id)
-    setItems(items.filter(i => i.id !== id))
-    if (selected?.id === id) setSelected(null)
-    toast('Deleted')
+    setLocations(ls => ls.filter(l => l.id !== id))
+    if (editing?.id === id) setEditing(null)
+    show('Deleted', 'success')
   }
 
-  if (loading) return <div style={{ color: 'var(--muted)' }}>Loading…</div>
+  const addLocation = () => {
+    const loc: Location = { id: `new-${Date.now()}`, town: 'New Town', slug: 'new-town', county: 'Hertfordshire', hero_image: '', intro: '', body: '', services: [], featured: true, meta_title: '', meta_description: '' }
+    setLocations(ls => [...ls, loc])
+    setEditing(loc)
+  }
+
+  const set = (f: keyof Location, v: unknown) => setEditing(e => e ? { ...e, [f]: v } : e)
+  const toggleService = (svc: string) => set('services', editing?.services?.includes(svc) ? editing.services.filter(s => s !== svc) : [...(editing?.services || []), svc])
 
   return (
-    <>
-      <div className="cms-header">
-        <h1>Where We Operate<span style={{ color: 'var(--orange)' }}>.</span></h1>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1.5rem', alignItems: 'start' }}>
-        <div>
-          <div className="cms-card" style={{ padding: '0.75rem' }}>
-            <button className="cms-btn" onClick={add} style={{ width: '100%', marginBottom: '0.75rem', fontSize: '0.7rem' }}>+ Add location</button>
-            {items.map(loc => (
-              <div key={loc.id} onClick={() => setSelected(loc)}
-                style={{ padding: '0.6rem 0.75rem', cursor: 'pointer', borderRadius: '2px', background: selected?.id === loc.id ? 'rgba(255,128,0,0.1)' : 'transparent', color: selected?.id === loc.id ? 'var(--orange)' : 'rgba(255,255,255,0.6)', fontSize: '0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>{loc.town}</span>
-                <button onClick={e => { e.stopPropagation(); remove(loc.id) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', fontSize: '0.8rem' }}>✕</button>
-              </div>
-            ))}
-          </div>
+    <div style={{ padding: '2.5rem', display: 'grid', gridTemplateColumns: '240px 1fr', gap: '2rem', alignItems: 'start', maxWidth: '1100px' }}>
+      {/* Location list */}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h1 style={{ fontSize: '1.1rem', fontWeight: 800 }}>📍 Locations</h1>
+          <button className="btn btn-ghost btn-sm" onClick={addLocation}>+</button>
         </div>
-
-        {selected ? (
-          <div>
-            <div className="cms-card">
-              <h2>Details</h2>
-              <div className="cms-field"><label>Town / City</label><input value={selected.town || ''} onChange={e => upd('town', e.target.value)} /></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                <div className="cms-field"><label>County</label><input value={selected.county || ''} onChange={e => upd('county', e.target.value)} /></div>
-                <div className="cms-field"><label>Slug</label><input value={selected.slug || ''} onChange={e => upd('slug', e.target.value)} /></div>
-              </div>
-              <div className="cms-field"><label>Intro text</label><textarea value={selected.intro || ''} onChange={e => upd('intro', e.target.value)} rows={3} /></div>
-              <div className="cms-field"><label>Body content (HTML)</label><textarea value={selected.body || ''} onChange={e => upd('body', e.target.value)} rows={8} style={{ fontFamily: 'monospace', fontSize: '0.85rem' }} placeholder="<h2>Web Design in {town}</h2><p>…</p>" /></div>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginBottom: '1rem' }}>
-                <input type="checkbox" checked={!!selected.published} onChange={e => upd('published', e.target.checked)} />
-                <span style={{ color: '#fff', fontSize: '0.875rem' }}>Published</span>
-              </label>
-            </div>
-            <div className="cms-card">
-              <ImageUpload value={selected.image_url} onChange={url => upd('image_url', url)} label="Hero image" />
-            </div>
-            <div className="cms-card">
-              <h2>SEO</h2>
-              <div className="cms-field"><label>Meta title</label><input value={selected.meta_title || ''} onChange={e => upd('meta_title', e.target.value)} placeholder={`Web Design ${selected.town} | Rufus Design`} /></div>
-              <div className="cms-field" style={{ marginBottom: 0 }}><label>Meta description</label><textarea value={selected.meta_description || ''} onChange={e => upd('meta_description', e.target.value)} rows={2} /></div>
-            </div>
-            <button className="cms-btn" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save location'}</button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px', color: 'var(--muted)' }}>
-            <div style={{ textAlign: 'center' }}>
-              <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📍</p>
-              <p>Select or add a location</p>
-            </div>
-          </div>
-        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+          {locations.map(loc => (
+            <button key={loc.id} onClick={() => setEditing(loc)}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.875rem', background: editing?.id === loc.id ? 'rgba(255,128,0,0.12)' : 'rgba(255,255,255,0.03)', border: editing?.id === loc.id ? '1px solid rgba(255,128,0,0.3)' : '1px solid transparent', borderRadius: '6px', cursor: 'pointer', textAlign: 'left', width: '100%', transition: 'all 0.15s' }}>
+              <span style={{ fontSize: '0.875rem', color: editing?.id === loc.id ? '#ff8000' : '#fff', fontWeight: editing?.id === loc.id ? 600 : 400 }}>{loc.town}</span>
+              <button type="button" onClick={e => { e.stopPropagation(); remove(loc.id) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.25)', cursor: 'pointer', fontSize: '0.9rem' }}>✕</button>
+            </button>
+          ))}
+        </div>
       </div>
-    </>
+
+      {/* Editor */}
+      {editing ? (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>{editing.town}</h2>
+            <button className="btn btn-orange" onClick={save} disabled={saving}>{saving ? 'Saving...' : '💾 Save'}</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+            <div className="field"><label>Town name</label><input value={editing.town} onChange={e => { set('town', e.target.value); set('slug', slugify(e.target.value)) }} /></div>
+            <div className="field"><label>Slug</label><input value={editing.slug} onChange={e => set('slug', e.target.value)} /></div>
+            <div className="field"><label>County</label><input value={editing.county || ''} onChange={e => set('county', e.target.value)} /></div>
+          </div>
+          <div className="field"><label>Intro paragraph</label><textarea value={editing.intro || ''} onChange={e => set('intro', e.target.value)} rows={3} /></div>
+          <div className="field">
+            <label>Services offered</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {ALL_SERVICES.map(svc => (
+                <button type="button" key={svc} onClick={() => toggleService(svc)}
+                  style={{ padding: '0.3em 0.75em', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: editing.services?.includes(svc) ? 'rgba(255,128,0,0.2)' : 'rgba(255,255,255,0.05)', border: editing.services?.includes(svc) ? '1px solid rgba(255,128,0,0.5)' : '1px solid rgba(255,255,255,0.1)', color: editing.services?.includes(svc) ? '#ff8000' : 'rgba(255,255,255,0.5)' }}>
+                  {svc}
+                </button>
+              ))}
+            </div>
+          </div>
+          <ImageUpload value={editing.hero_image || ''} onChange={url => set('hero_image', url)} folder="locations" label="Hero image" />
+          <div className="field"><label>Page body (use H2 headings for table of contents)</label><RichTextEditor value={editing.body || ''} onChange={html => set('body', html)} placeholder="Write about web design services in this area..." /></div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
+            <div className="field"><label>SEO title</label><input value={editing.meta_title || ''} onChange={e => set('meta_title', e.target.value)} /></div>
+            <div className="field"><label>SEO description</label><input value={editing.meta_description || ''} onChange={e => set('meta_description', e.target.value)} /></div>
+          </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
+            <label className="toggle"><input type="checkbox" checked={editing.featured} onChange={e => set('featured', e.target.checked)} /><span className="toggle-slider" /></label>
+            Show on overview page
+          </label>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px', color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>
+          Select a location to edit
+        </div>
+      )}
+    </div>
   )
 }

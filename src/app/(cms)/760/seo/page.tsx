@@ -1,56 +1,69 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from "@/lib/supabase/client"
 import { useToast } from '@/components/ui/Toast'
 
-export default function CmsSeoPage() {
-  const [data, setData] = useState<any>({ ga4_id: '', gtm_id: '', google_verify: '', bing_verify: '', custom_head_scripts: '' })
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+interface SeoSettings { id: string; google_verification: string; ga4_id: string; gtm_id: string; head_scripts: string; body_scripts: string }
+
+export default function SeoPage() {
   const supabase = createClient()
-  const { toast } = useToast()
+  const { show } = useToast()
+  const [s, setS] = useState<SeoSettings | null>(null)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    supabase.from('seo_settings').select('*').single()
-      .then(({ data }) => { if (data) setData(data); setLoading(false) })
+    supabase.from('seo_settings').select('*').single().then(({ data }) => { if (data) setS(data) })
   }, [])
 
-  function upd(k: string, v: string) { setData((d: any) => ({ ...d, [k]: v })) }
-
-  async function save() {
+  const save = async () => {
+    if (!s) return
     setSaving(true)
-    const { error } = await supabase.from('seo_settings').upsert({ id: data.id || 1, ...data })
-    toast(error ? error.message : 'Saved!', error ? 'error' : 'success')
+    const { error } = await supabase.from('seo_settings').update({ ...s, updated_at: new Date().toISOString() }).eq('id', s.id)
+    show(error ? 'Error saving' : 'SEO settings saved!', error ? 'error' : 'success')
     setSaving(false)
   }
 
-  if (loading) return <div style={{ color: 'var(--muted)' }}>Loading…</div>
+  const set = (f: keyof SeoSettings, v: string) => setS(x => x ? { ...x, [f]: v } : x)
+
+  if (!s) return <div style={{ padding: '2.5rem', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
 
   return (
-    <>
-      <div className="cms-header"><h1>SEO & Analytics<span style={{ color: 'var(--orange)' }}>.</span></h1></div>
-
-      <div className="cms-card">
-        <h2>Analytics</h2>
-        <div className="cms-field"><label>Google Analytics 4 ID</label><input value={data.ga4_id || ''} onChange={e => upd('ga4_id', e.target.value)} placeholder="G-XXXXXXXXXX" /></div>
-        <div className="cms-field" style={{ marginBottom: 0 }}><label>Google Tag Manager ID</label><input value={data.gtm_id || ''} onChange={e => upd('gtm_id', e.target.value)} placeholder="GTM-XXXXXXX" /></div>
+    <div style={{ padding: '2.5rem', maxWidth: '700px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em' }}>🔍 SEO & Analytics</h1>
+        <button className="btn btn-orange" onClick={save} disabled={saving}>{saving ? 'Saving...' : '💾 Save'}</button>
       </div>
 
-      <div className="cms-card">
-        <h2>Verification codes</h2>
-        <div className="cms-field"><label>Google Search Console verification</label><input value={data.google_verify || ''} onChange={e => upd('google_verify', e.target.value)} placeholder="Paste meta content value" /></div>
-        <div className="cms-field" style={{ marginBottom: 0 }}><label>Bing Webmaster verification</label><input value={data.bing_verify || ''} onChange={e => upd('bing_verify', e.target.value)} /></div>
-      </div>
-
-      <div className="cms-card">
-        <h2>Custom &lt;head&gt; scripts</h2>
-        <p style={{ fontSize: '0.8rem', color: 'var(--muted)', marginBottom: '0.75rem' }}>Injected into &lt;head&gt; on every page. Use with care.</p>
-        <div className="cms-field" style={{ marginBottom: 0 }}>
-          <textarea value={data.custom_head_scripts || ''} onChange={e => upd('custom_head_scripts', e.target.value)} rows={6} style={{ fontFamily: 'monospace', fontSize: '0.82rem' }} placeholder="<!-- e.g. Hotjar, Intercom, custom scripts -->" />
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1.25rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Google</h2>
+        <div className="field">
+          <label>Search Console verification code</label>
+          <input value={s.google_verification || ''} onChange={e => set('google_verification', e.target.value)} placeholder="Paste the content= value from the meta tag" />
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.35rem' }}>Google Search Console → Verify → HTML tag → copy the content= value only</p>
+        </div>
+        <div className="field">
+          <label>Google Analytics 4 ID</label>
+          <input value={s.ga4_id || ''} onChange={e => set('ga4_id', e.target.value)} placeholder="G-XXXXXXXXXX" />
+        </div>
+        <div className="field" style={{ margin: 0 }}>
+          <label>Google Tag Manager ID</label>
+          <input value={s.gtm_id || ''} onChange={e => set('gtm_id', e.target.value)} placeholder="GTM-XXXXXXX" />
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.35rem' }}>If using GTM, leave GA4 blank — manage GA4 through GTM instead</p>
         </div>
       </div>
 
-      <button className="cms-btn" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
-    </>
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Custom scripts</h2>
+        <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', marginBottom: '1.25rem' }}>For Hotjar, cookie banners, live chat etc.</p>
+        <div className="field">
+          <label>Head scripts (before &lt;/head&gt;)</label>
+          <textarea value={s.head_scripts || ''} onChange={e => set('head_scripts', e.target.value)} rows={4} placeholder='<script src="...">' style={{ fontFamily: 'monospace', fontSize: '0.8rem' }} />
+        </div>
+        <div className="field" style={{ margin: 0 }}>
+          <label>Body scripts (before &lt;/body&gt;)</label>
+          <textarea value={s.body_scripts || ''} onChange={e => set('body_scripts', e.target.value)} rows={4} placeholder='<noscript>...' style={{ fontFamily: 'monospace', fontSize: '0.8rem' }} />
+        </div>
+      </div>
+    </div>
   )
 }
