@@ -51,6 +51,8 @@ const nextConfig: NextConfig = {
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://calendly.com https://consent.cookiefirst.com https://analytics.rufusdesign.co.uk",
+  "connect-src 'self' https://fjdyhfutrbjlonekigfh.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://api.brevo.com https://www.google.com/recaptcha/ https://consent.cookiefirst.com https://analytics.rufusdesign.co.uk",          
 ].join('; '),
         },
       ],
