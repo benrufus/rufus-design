@@ -966,3 +966,21 @@ blockquote {
 .work-gallery-item img { width: 100%; display: block; transition: transform 0.5s; }
 .work-gallery-item:hover img { transform: scale(1.03); }
 @media (max-width: 600px) { .work-gallery { columns: 1; } }
+
+/* ─── Breadcrumb ─────────────────────────────────────── */
+.breadcrumb {
+  position: absolute;
+  top: 88px;
+  left: clamp(1.5rem, 4vw, 3rem);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+.breadcrumb-item { display: flex; align-items: center; gap: 0.25rem; }
+.breadcrumb-item a { color: rgba(255,255,255,0.4); transition: color 0.2s; }
+.breadcrumb-item a:hover { color: #fff; }
+.breadcrumb-item span:last-child { color: var(--orange); }
+.breadcrumb-sep { color: rgba(255,255,255,0.2); }
