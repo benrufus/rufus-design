@@ -949,3 +949,19 @@ blockquote {
 .article-body > div img { margin: 2rem 0; }
 .article-body > div hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+.work-video { width: 100%; max-height: 600px; background: #000; display: block; }
+.work-gallery {
+  columns: 2;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.work-gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.work-gallery-item img { width: 100%; display: block; transition: transform 0.5s; }
+.work-gallery-item:hover img { transform: scale(1.03); }
+@media (max-width: 600px) { .work-gallery { columns: 1; } }
