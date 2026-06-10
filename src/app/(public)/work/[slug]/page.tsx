@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getWorkBySlug } from '@/lib/db'
 import Contact from '@/components/sections/Contact'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 
 export const revalidate = 0
 interface Props { params: Promise<{ slug: string }> }
@@ -38,11 +39,7 @@ export default async function WorkSlugPage({ params }: Props) {
     description: item.excerpt || '',
     image: item.cover_image || '',
     url: item.url || `${siteUrl}/work/${slug}`,
-    creator: {
-      '@type': 'Organization',
-      name: 'Rufus Design',
-      url: siteUrl,
-    },
+    creator: { '@type': 'Organization', name: 'Rufus Design', url: siteUrl },
     dateCreated: item.year ? `${item.year}` : undefined,
     keywords: (item.tags || []).join(', '),
   }
@@ -50,6 +47,7 @@ export default async function WorkSlugPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Work', href: '/work' }, { label: item.title }]} />
 
       <section className="cover-hero">
         {item.cover_image ? (
@@ -58,21 +56,15 @@ export default async function WorkSlugPage({ params }: Props) {
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
-              {item.client && (
-                <p className="section-eyebrow">{item.client}{item.year ? ` · ${item.year}` : ''}</p>
-              )}
+              {item.client && <p className="section-eyebrow">{item.client}{item.year ? ` · ${item.year}` : ''}</p>}
               {(item.tags?.length ?? 0) > 0 && (
                 <div className="cover-tags">
-                  {item.tags.map((t: string) => (
-                    <span key={t} className="cover-tag">{t}</span>
-                  ))}
+                  {item.tags.map((t: string) => <span key={t} className="cover-tag">{t}</span>)}
                 </div>
               )}
               <h1 className="cover-title">{item.title}<span className="text-orange">.</span></h1>
               {item.excerpt && <p className="cover-excerpt">{item.excerpt}</p>}
-              {item.url && (
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="cover-link">Visit site →</a>
-              )}
+              {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="cover-link">Visit site →</a>}
             </div>
           </div>
         ) : (

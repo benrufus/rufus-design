@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHero from '@/components/ui/PageHero'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 import Testimonials from '@/components/sections/Testimonials'
 import Contact from '@/components/sections/Contact'
 import LogoStrip from '@/components/ui/LogoStrip'
@@ -11,7 +12,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'About Us | Rufus Design',
-  description: `Rufus Design is a small yet mighty digital agency based in Berkhamsted, Hertfordshire. Since 2007 we have helped businesses of all sizes grow online through website design and development, SEO, PPC, social media marketing, branding, graphic design, content creation, hosting, IT support, and bespoke digital solutions. Whether you're a start-up looking to launch a new brand or an established business aiming to generate more leads, we have the experience, creativity and technical expertise to help you achieve your goals.`,
+  description: 'Rufus Design is a small yet mighty digital agency based in Berkhamsted, Hertfordshire. Since 2007 we have helped businesses of all sizes grow online.',
   alternates: { canonical: '/about' },
 }
 export const revalidate = 0
@@ -106,7 +107,7 @@ export default async function AboutPage() {
             <h2 className="section-title">Our services<span className="dot">.</span></h2>
             <div className="services-grid" style={{ marginTop: '3rem' }}>
               {servicesList.map((s: any) => (
-                <Link key={s.id} href={`/services/${s.slug}`} style={{ textDecoration: 'none' }}>
+                <Link key={s.id} href={s.slug ? `/services/${s.slug}` : '/services'} style={{ textDecoration: 'none' }}>
                   <div className="service-card">
                     <p className="service-num">{s.number}</p>
                     <h3 className="service-name">{s.title}</h3>
@@ -130,20 +131,20 @@ export default async function AboutPage() {
     }
   }
 
-  // If no sections configured yet, show everything
   const sectionsToRender = sectionList.length > 0
     ? sectionList.map((s: any) => renderSection(s.section_key))
     : ['stats', 'logos', 'team', 'values', 'services', 'testimonials'].map(renderSection)
 
   return (
     <>
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'About us' }]} />
       <PageHero
         label="Our story"
         title={ap?.heading || 'About us'}
         intro={ap?.intro || 'A small, focused agency delivering big results since 2007.'}
       />
       {sectionsToRender}
-      <Contact />
+      <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
 }

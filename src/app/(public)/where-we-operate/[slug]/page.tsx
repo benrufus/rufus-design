@@ -4,6 +4,7 @@ import Link from 'next/link'
 import WorkGrid from '@/components/sections/WorkGrid'
 import Contact from '@/components/sections/Contact'
 import LocationHero from '@/components/ui/LocationHero'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 import { getLocationBySlug, getWork, getSiteSettings } from '@/lib/db'
 
 export const revalidate = 0
@@ -33,10 +34,8 @@ export default async function LocationPage({ params }: Props) {
 
   return (
     <>
-      <LocationHero
-        town={location.town}
-        intro={location.intro}
-      />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Where We Operate', href: '/where-we-operate' }, { label: location.town }]} />
+      <LocationHero town={location.town} intro={location.intro} />
 
       {location.services?.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)', paddingTop: '2rem', paddingBottom: '2rem' }}>
@@ -49,8 +48,7 @@ export default async function LocationPage({ params }: Props) {
       )}
 
       {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
-
-      <Contact />
+      <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
 }

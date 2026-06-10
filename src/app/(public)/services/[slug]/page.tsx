@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import WorkGrid from '@/components/sections/WorkGrid'
 import Contact from '@/components/sections/Contact'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 import { getServicesPageBySlug, getWork, getSiteSettings } from '@/lib/db'
 
 export const revalidate = 0
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!service) return {}
   return {
     title: service.meta_title || `${service.title} | Rufus Design`,
-    description: service.meta_description || service.excerpt || `${service.title} services from Rufus Design, Berkhamsted.`,
+    description: service.meta_description || service.excerpt,
     alternates: { canonical: `/services/${slug}` },
   }
 }
@@ -30,21 +31,33 @@ export default async function ServicePage({ params }: Props) {
   const s = service as any
   const workItems = (work as any[]) || []
   const settings = siteSettings as any
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.title,
+    description: s.excerpt || s.intro || '',
+    provider: { '@type': 'Organization', name: 'Rufus Design', url: siteUrl },
+    url: `${siteUrl}/services/${slug}`,
+    image: s.hero_image || '',
+  }
 
   return (
     <>
-      {/* Hero */}
-      <section style={{ paddingTop: '72px', background: 'var(--bg)', position: 'relative' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Services', href: '/services' }, { label: s.title }]} />
+
+      <section className="cover-hero">
         {s.hero_image ? (
-          <div style={{ width: '100%', maxHeight: '500px', overflow: 'hidden', position: 'relative' }}>
-            <img src={s.hero_image} alt={s.title} style={{ width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' }} />
+          <div className="cover-image-wrap">
+            <img src={s.hero_image} alt={s.title} className="cover-image" />
             <div className="cover-overlay" />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
-              <p className="section-label">Our services</p>
-              <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 1.05, color: '#fff' }}>
-                {s.title}<span style={{ color: 'var(--orange)' }}>.</span>
-              </h1>
-              {s.intro && <p style={{ marginTop: '1rem', fontSize: 'clamp(1rem, 1.4vw, 1.1rem)', color: 'rgba(255,255,255,0.7)', maxWidth: '600px', lineHeight: 1.6 }}>{s.intro}</p>}
+            <div className="cover-gradient" />
+            <div className="cover-content">
+              <p className="section-eyebrow">Our services</p>
+              <h1 className="cover-title">{s.title}<span className="text-orange">.</span></h1>
+              {s.intro && <p className="cover-excerpt">{s.intro}</p>}
             </div>
           </div>
         ) : (
@@ -56,25 +69,21 @@ export default async function ServicePage({ params }: Props) {
         )}
       </section>
 
-      {/* Body */}
       {s.body && (
-        <section className="section" style={{ background: 'var(--bg)' }}>
-          <div style={{ maxWidth: '720px', lineHeight: 1.9, color: 'rgba(255,255,255,0.8)', fontSize: '1.05rem' }}
-            dangerouslySetInnerHTML={{ __html: s.body }} />
+        <section className="section article-body">
+          <div dangerouslySetInnerHTML={{ __html: s.body }} />
         </section>
       )}
 
-      {/* CTA */}
       <section className="section" style={{ background: 'var(--bg2)', paddingTop: '3rem', paddingBottom: '3rem' }}>
         <p className="section-label">Ready to get started?</p>
-        <h2 className="section-title">{s.title} for your business<span className="dot">.</span></h2>
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+        <h2 className="section-title" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', marginBottom: '2rem' }}>{s.title} for your business<span className="dot">.</span></h2>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <Link href="/contact" className="btn-primary">Get in touch</Link>
           <Link href="/services" className="btn-secondary">All services</Link>
         </div>
       </section>
 
-      {/* Our work */}
       {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
 
       <Contact phone={settings?.phone} email={settings?.email} />

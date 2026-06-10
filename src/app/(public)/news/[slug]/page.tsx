@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getPosts } from '@/lib/db'
 import Contact from '@/components/sections/Contact'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 
 export const revalidate = 0
 interface Props { params: Promise<{ slug: string }> }
@@ -27,21 +28,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NewsSlugPage({ params }: Props) {
   const { slug } = await params
   const [post, allPosts] = await Promise.allSettled([
-    getPostBySlug(slug),
-    getPosts(),
+    getPostBySlug(slug), getPosts(),
   ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
 
   if (!post) notFound()
 
   const p = post as any
   const related = ((allPosts as any[]) || []).filter((r: any) => r.slug !== slug).slice(0, 3)
-
   const date = p.published_at
     ? new Date(p.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
     : null
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
-
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -50,23 +48,15 @@ export default async function NewsSlugPage({ params }: Props) {
     image: p.cover_image ? [p.cover_image] : [],
     datePublished: p.published_at || '',
     dateModified: p.updated_at || p.published_at || '',
-    author: {
-      '@type': 'Organization',
-      name: 'Rufus Design',
-      url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Rufus Design',
-      url: siteUrl,
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/RufusDoggo.png` },
-    },
+    author: { '@type': 'Organization', name: 'Rufus Design', url: siteUrl },
+    publisher: { '@type': 'Organization', name: 'Rufus Design', url: siteUrl },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/news/${slug}` },
   }
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'News', href: '/news' }, { label: p.title }]} />
 
       <section className="cover-hero">
         {p.cover_image ? (
@@ -109,15 +99,9 @@ export default async function NewsSlugPage({ params }: Props) {
             {related.map((rel: any) => (
               <Link key={rel.id} href={`/news/${rel.slug}`} style={{ textDecoration: 'none' }}>
                 <article className="news-card">
-                  {rel.cover_image && (
-                    <div className="news-card-img">
-                      <img src={rel.cover_image} alt={rel.cover_image_alt || rel.title} />
-                    </div>
-                  )}
+                  {rel.cover_image && <div className="news-card-img"><img src={rel.cover_image} alt={rel.cover_image_alt || rel.title} /></div>}
                   <div className="news-card-body">
-                    {rel.published_at && (
-                      <p className="news-card-date">{new Date(rel.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                    )}
+                    {rel.published_at && <p className="news-card-date">{new Date(rel.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>}
                     <h3>{rel.title}</h3>
                     {rel.excerpt && <p>{rel.excerpt.slice(0, 100)}…</p>}
                     <span className="news-card-link">Read more →</span>
