@@ -999,6 +999,18 @@ blockquote {
   .about-story-grid { grid-template-columns: 1fr; }
 }
 
-/* Work cover hero - fix squashed mobile */
-.cover-image-wrap { max-height: 60vw; min-height: 280px; }
-.cover-image { max-height: 60vw; min-height: 280px; }
+@media (max-width: 480px) {
+  .services-cta { flex-direction: column; }
+  .services-cta .btn-primary,
+  .services-cta .btn-secondary { width: 100%; text-align: center; }
+}
+
+@media (max-width: 768px) {
+  .cover-content { padding-bottom: 2rem; }
+  .cover-tags { margin-top: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .cover-image-wrap { max-height: none; min-height: 420px; }
+  .cover-image { max-height: none; min-height: 420px; }
+}
