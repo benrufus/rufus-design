@@ -891,3 +891,10 @@ button { cursor: none; font-family: var(--font-body); }
 @media (hover: none) {
   .cursor-dot, .cursor-ring { display: none !important; }
 }
+
+/* ─── Cover image overlay ────────────────────────────── */
+.cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
