@@ -11,7 +11,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'About Us | Rufus Design',
-  description: 'Rufus Design is a web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
+  description: 'Rufus Design is a small yet mighty digital agency based in Berkhamsted, Hertfordshire. Since 2007 we have helped businesses of all sizes grow online through website design and development, SEO, PPC, social media marketing, branding, graphic design, content creation, hosting, IT support, and bespoke digital solutions. Whether you're a start-up looking to launch a new brand or an established business aiming to generate more leads, we have the experience, creativity and technical expertise to help you achieve your goals.',
   alternates: { canonical: '/about' },
 }
 export const revalidate = 0
