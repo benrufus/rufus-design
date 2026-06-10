@@ -50,7 +50,7 @@ export default async function LocationPage({ params }: Props) {
 
       {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
 
-      <Contact phone={settings?.phone} email={settings?.email} />
+      <Contact />
     </>
   )
 }
