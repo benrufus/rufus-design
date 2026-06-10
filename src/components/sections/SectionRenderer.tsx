@@ -49,7 +49,7 @@ export default function SectionRenderer({ section, data }: SectionRendererProps)
     case 'about':
       return (
         <About
-          headline={data.homePage?.about_heading || undefined}
+          heading={data.homePage?.about_heading || undefined}
           body={data.homePage?.about_body || undefined}
           quote={data.homePage?.about_quote || undefined}
           stats={data.stats || []}
