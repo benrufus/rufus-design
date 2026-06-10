@@ -3,12 +3,15 @@ import Link from 'next/link'
 import PageHero from '@/components/ui/PageHero'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
-import { getServicesPages, getSiteSettings } from '@/lib/db'
+import { getServicesPages, getSiteSettings, getPageSeo } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'Our Services | Rufus Design',
-  description: 'Web design, SEO, PPC, managed hosting and digital marketing services from Rufus Design, Berkhamsted.',
-  alternates: { canonical: '/services' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('services').catch(() => null)
+  return {
+    title: seo?.title || 'Our Services',
+    description: seo?.description || 'Web design, SEO, PPC, managed hosting and digital marketing services from Rufus Design, Berkhamsted.',
+    alternates: { canonical: '/services' },
+  }
 }
 export const revalidate = 0
 
