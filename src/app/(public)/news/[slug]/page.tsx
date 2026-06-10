@@ -49,4 +49,10 @@ export default async function NewsSlugPage({ params }: Props) {
       {post.body && (
         <section className="section article-body">
           <div dangerouslySetInnerHTML={{ __html: post.body }} />
-        </sec
+        </section>
+      )}
+
+      <Contact />
+    </>
+  )
+}
