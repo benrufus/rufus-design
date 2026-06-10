@@ -151,22 +151,27 @@ export default async function AboutPage() {
             <p className="section-label">Est. 2007</p>
             <h2>Our story<span className="dot">.</span></h2>
             <p style={{ marginTop: '1.5rem', color: 'var(--muted)', lineHeight: 1.9 }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
+              Rufus Design is a small yet mighty digital agency based in Berkhamsted, Hertfordshire. Founded in 2007, we help businesses grow through website design and development, SEO, paid advertising, social media marketing, branding, hosting, IT support and bespoke digital solutions.
+              </p>
             <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <Link href="/contact" className="btn-primary" style={{ marginTop: '2rem', display: 'inline-block' }}>Work with us</Link>
+              The company was named after Rufus, the owner's first dog, a Giant Schnauzer with a larger-than-life personality. What started as a freelance web design business has grown into a trusted digital partner for businesses across Hertfordshire, Buckinghamshire, London and the wider UK.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
+              Over the years, we've worked with organisations of all sizes, from global brands including Sony, Butlin's and Duarte, through to SMEs such as Simon Taylor Furniture, KDA Accountants and Reborne Longevity. We believe every client deserves the same level of care and attention, regardless of their size.
+              </p>
           </div>
           <div>
             <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
+              Many of our clients have been with us for years. Simon Taylor Furniture, for example, has trusted us since 2010. We see this as one of our biggest achievements and a reflection of the relationships we build with our clients.
+              </p>
             <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
-            </p>
+              We're also passionate about supporting our local community and regularly work with charities and not-for-profit organisations. Current projects include supporting Castle Fields and other organisations looking to make a bigger impact online.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
+              If you're considering working with Rufus Design, we encourage you to read our testimonials and reviews. They provide an honest reflection of the way we work: straightforward advice, reliable service, and digital solutions that deliver real results.
+              </p>
             <blockquote style={{ marginTop: '2rem' }}>
-              We don&apos;t just build websites. We build digital foundations that businesses grow on for years.
+              We don't just build websites. We help businesses grow, evolve and succeed online. And unlike Thanos, we have absolutely no intention of making half your traffic disappear. (Sorry Marvel Reference)
             </blockquote>
           </div>
         </div>
