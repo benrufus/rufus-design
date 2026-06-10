@@ -38,7 +38,7 @@ export default async function ServicePage({ params }: Props) {
         {s.hero_image ? (
           <div style={{ width: '100%', maxHeight: '500px', overflow: 'hidden', position: 'relative' }}>
             <img src={s.hero_image} alt={s.title} style={{ width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', background: 'linear-gradient(to top, rgba(17,17,17,0.97) 0%, transparent 100%)' }} />
+            <div className="cover-overlay" />
             <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
               <p className="section-label">Our services</p>
               <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 1.05, color: '#fff' }}>
