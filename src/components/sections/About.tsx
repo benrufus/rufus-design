@@ -1,7 +1,5 @@
 'use client'
 import { useReveal } from '@/lib/useReveal'
-import { useParallax } from '@/lib/useParallax'
-import AnimatedHeading from '@/components/ui/AnimatedHeading'
 
 interface Stat { value: string; label: string }
 interface AboutProps { heading?: string; body?: string; stats?: Stat[]; quote?: string }
@@ -14,18 +12,16 @@ const DEFAULT_STATS: Stat[] = [
 ]
 
 export default function About({ heading, body, stats, quote }: AboutProps) {
-  const sectionRef = useReveal()
-  const bgRef = useParallax(0.14)
+  const { ref, visible } = useReveal()
   const displayStats = stats?.length ? stats : DEFAULT_STATS
 
   return (
-    <section ref={sectionRef as React.RefObject<HTMLElement>} className="about-section reveal">
-      <div ref={bgRef} className="about-bg-glow" />
+    <section ref={ref as React.RefObject<HTMLElement>} className={`about-section${visible ? ' visible' : ''}`}>
       <div className="about-left">
         <p className="section-eyebrow">About Rufus</p>
-        <AnimatedHeading className="about-heading">
+        <h2 className="about-heading">
           {heading || <>Helping businesses grow <span className="text-orange">since 2007.</span></>}
-        </AnimatedHeading>
+        </h2>
         <p className="about-body">
           {body || "We're a small, expert team based in Berkhamsted. No account managers, no middlemen — just direct access to experienced designers and developers who care about results."}
         </p>
@@ -40,9 +36,11 @@ export default function About({ heading, body, stats, quote }: AboutProps) {
             </div>
           ))}
         </div>
-        <blockquote className="about-quote">
-          &ldquo;{quote || 'Everything we do is focused on clarity, performance and long-term results.'}&rdquo;
-        </blockquote>
+        {quote && (
+          <blockquote className="about-quote">
+            &ldquo;{quote}&rdquo;
+          </blockquote>
+        )}
       </div>
     </section>
   )
