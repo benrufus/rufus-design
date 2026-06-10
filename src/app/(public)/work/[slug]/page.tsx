@@ -18,12 +18,19 @@ export default async function WorkSlugPage({ params }: Props) {
   const item = await getWorkBySlug(slug).catch(() => null)
   if (!item) notFound()
 
+  const gallery: { url: string; alt: string }[] = item.gallery || []
+  const results: { metric: string; value: string }[] = item.results || []
+
   return (
     <>
       <section className="cover-hero">
         {item.cover_image ? (
           <div className="cover-image-wrap">
-            <img src={item.cover_image} alt={item.title} className="cover-image" />
+            <img
+              src={item.cover_image}
+              alt={item.cover_image_alt || item.title}
+              className="cover-image"
+            />
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
@@ -60,6 +67,33 @@ export default async function WorkSlugPage({ params }: Props) {
       {item.body && (
         <section className="section article-body">
           <div dangerouslySetInnerHTML={{ __html: typeof item.body === 'string' ? item.body : JSON.stringify(item.body) }} />
+        </section>
+      )}
+
+      {results.length > 0 && (
+        <section className="section" style={{ background: 'var(--bg2)' }}>
+          <p className="section-label">The results</p>
+          <div className="work-results">
+            {results.map((r, i) => (
+              <div key={i} className="work-result">
+                <p className="work-result-value">{r.value}</p>
+                <p className="work-result-metric">{r.metric}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {gallery.length > 0 && (
+        <section className="section">
+          <p className="section-label">Project images</p>
+          <div className="work-gallery">
+            {gallery.map((img, i) => (
+              <div key={i} className="work-gallery-item">
+                <img src={img.url} alt={img.alt || item.title} />
+              </div>
+            ))}
+          </div>
         </section>
       )}
 
