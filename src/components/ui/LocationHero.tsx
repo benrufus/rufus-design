@@ -51,7 +51,7 @@ export default function LocationHero({ town, intro }: Props) {
           </p>
           <div className="hero-buttons">
             <Link href="/contact" className="btn-primary">Let&apos;s talk</Link>
-            <Link href="/work" className="btn-outline">Our work</Link>
+            <Link href="/work" className="btn-secondary">Our work</Link>
           </div>
         </div>
       </div>
