@@ -70,6 +70,17 @@ export default async function WorkSlugPage({ params }: Props) {
         </section>
       )}
 
+      {item.video_url && (
+  <section className="section" style={{ background: 'var(--bg2)' }}>
+    <p className="section-label">Project video</p>
+    <video
+      src={item.video_url}
+      controls
+      className="work-video"
+    />
+  </section>
+)}
+
       {results.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }}>
           <p className="section-label">The results</p>
