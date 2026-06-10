@@ -876,3 +876,18 @@ button { cursor: none; font-family: var(--font-body); }
   margin-bottom: 1rem;
 }
 .text-orange { color: #ff8000; }
+
+/* ─── Footer socials & links ─────────────────────────── */
+.footer-socials { display: flex; flex-direction: row; gap: 1rem; margin-top: 1.5rem; align-items: center; }
+.footer-social-icon { color: var(--muted); display: flex; align-items: center; transition: color 0.2s, transform 0.2s; }
+.footer-social-icon:hover { color: var(--orange); transform: translateY(-2px); }
+.footer-link-muted { color: var(--muted); font-size: 0.875rem; transition: color 0.2s; }
+.footer-link-muted:hover { color: #fff; }
+.footer-address { color: var(--muted); font-size: 0.875rem; line-height: 1.7; margin-top: 0.25rem; }
+.footer-address span { display: block; }
+.footer-legal { display: flex; gap: 1.5rem; }
+
+/* ─── Mobile cursor hide ─────────────────────────────── */
+@media (hover: none) {
+  .cursor-dot, .cursor-ring { display: none !important; }
+}
