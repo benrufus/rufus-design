@@ -41,7 +41,7 @@ export default async function WorkSlugPage({ params }: Props) {
               )}
               {(item.tags?.length ?? 0) > 0 && (
                 <div className="cover-tags">
-                  {item.tags.slice(0, 8).map((t: string) => (
+                  {item.tags.map((t: string) => (
                     <span key={t} className="cover-tag">{t}</span>
                   ))}
                 </div>
