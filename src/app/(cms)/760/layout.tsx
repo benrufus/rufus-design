@@ -83,6 +83,10 @@ function CmsWrap({ children }: { children: React.ReactNode }) {
   )
 }
 
+export const metadata = {
+  robots: { index: false, follow: false },
+}
+
 export default function CmsLayout({ children }: { children: React.ReactNode }) {
   return (
     <ToastProvider>
