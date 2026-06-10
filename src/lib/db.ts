@@ -151,3 +151,18 @@ export async function getLocationBySlug(slug: string) {
   const { data } = await sb.from('locations').select('*').eq('slug', slug).single()
   return data
 }
+
+export async function getServicesPages(publishedOnly = true) {
+  const sb = await createClient()
+  let q = sb.from('services_pages').select('*').order('sort_order')
+  if (publishedOnly) q = q.eq('published', true)
+  const { data } = await q
+  return data || []
+}
+
+export async function getServicesPageBySlug(slug: string) {
+  const sb = await createClient()
+  const { data } = await sb.from('services_pages').select('*').eq('slug', slug).single()
+  return data
+}
+

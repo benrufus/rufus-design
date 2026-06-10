@@ -7,6 +7,7 @@ const NAV = [
   { section: 'PAGES', items: [
     { href: '/760/home', label: 'Home Page', icon: '🏠' },
     { href: '/760/about', label: 'About Page', icon: '👋' },
+    { href: '/760/services', label: 'Services', icon: '🛠' },
     { href: '/760/pages', label: 'Pages & SEO', icon: '📄' },
   ]},
   { section: 'CONTENT', items: [
