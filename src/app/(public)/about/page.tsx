@@ -106,7 +106,7 @@ export default async function AboutPage() {
             <h2 className="section-title">Our services<span className="dot">.</span></h2>
             <div className="services-grid" style={{ marginTop: '3rem' }}>
               {servicesList.map((s: any) => (
-                <Link key={s.id} href="/contact" style={{ textDecoration: 'none' }}>
+                <Link key={s.id} href={`/services/${s.slug}`} style={{ textDecoration: 'none' }}>
                   <div className="service-card">
                     <p className="service-num">{s.number}</p>
                     <h3 className="service-name">{s.title}</h3>

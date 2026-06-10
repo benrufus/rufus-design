@@ -11,7 +11,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = await getPostBySlug(slug).catch(() => null)
   if (!post) return {}
-  return { title: post.title, description: post.excerpt }
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      publishedTime: post.published_at,
+      images: post.cover_image ? [{ url: post.cover_image }] : [],
+    },
+  }
 }
 
 export default async function NewsSlugPage({ params }: Props) {
@@ -23,19 +33,41 @@ export default async function NewsSlugPage({ params }: Props) {
 
   if (!post) notFound()
 
-  const date = (post as any).published_at
-    ? new Date((post as any).published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const p = post as any
+  const related = ((allPosts as any[]) || []).filter((r: any) => r.slug !== slug).slice(0, 3)
+
+  const date = p.published_at
+    ? new Date(p.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
     : null
 
-  // Related posts — exclude current, max 3
-  const related = ((allPosts as any[]) || [])
-    .filter((p: any) => p.slug !== slug)
-    .slice(0, 3)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
 
-  const p = post as any
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: p.title,
+    description: p.excerpt || '',
+    image: p.cover_image ? [p.cover_image] : [],
+    datePublished: p.published_at || '',
+    dateModified: p.updated_at || p.published_at || '',
+    author: {
+      '@type': 'Organization',
+      name: 'Rufus Design',
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Rufus Design',
+      url: siteUrl,
+      logo: { '@type': 'ImageObject', url: `${siteUrl}/RufusDoggo.png` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/news/${slug}` },
+  }
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <section className="cover-hero">
         {p.cover_image ? (
           <div className="cover-image-wrap">
@@ -64,7 +96,6 @@ export default async function NewsSlugPage({ params }: Props) {
         </section>
       )}
 
-      {/* Back to news + related */}
       <section className="section" style={{ background: 'var(--bg2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
@@ -73,7 +104,6 @@ export default async function NewsSlugPage({ params }: Props) {
           </div>
           <Link href="/news" className="btn-secondary">View all news</Link>
         </div>
-
         {related.length > 0 ? (
           <div className="news-grid">
             {related.map((rel: any) => (
@@ -86,9 +116,7 @@ export default async function NewsSlugPage({ params }: Props) {
                   )}
                   <div className="news-card-body">
                     {rel.published_at && (
-                      <p className="news-card-date">
-                        {new Date(rel.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </p>
+                      <p className="news-card-date">{new Date(rel.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                     )}
                     <h3>{rel.title}</h3>
                     {rel.excerpt && <p>{rel.excerpt.slice(0, 100)}…</p>}

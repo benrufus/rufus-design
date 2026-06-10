@@ -10,7 +10,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const item = await getWorkBySlug(slug).catch(() => null)
   if (!item) return {}
-  return { title: item.title, description: item.excerpt }
+  return {
+    title: item.title,
+    description: item.excerpt,
+    openGraph: {
+      title: item.title,
+      description: item.excerpt,
+      type: 'website',
+      images: item.cover_image ? [{ url: item.cover_image }] : [],
+    },
+  }
 }
 
 export default async function WorkSlugPage({ params }: Props) {
@@ -20,24 +29,37 @@ export default async function WorkSlugPage({ params }: Props) {
 
   const gallery: { url: string; alt: string }[] = item.gallery || []
   const results: { metric: string; value: string }[] = item.results || []
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: item.title,
+    description: item.excerpt || '',
+    image: item.cover_image || '',
+    url: item.url || `${siteUrl}/work/${slug}`,
+    creator: {
+      '@type': 'Organization',
+      name: 'Rufus Design',
+      url: siteUrl,
+    },
+    dateCreated: item.year ? `${item.year}` : undefined,
+    keywords: (item.tags || []).join(', '),
+  }
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <section className="cover-hero">
         {item.cover_image ? (
           <div className="cover-image-wrap">
-            <img
-              src={item.cover_image}
-              alt={item.cover_image_alt || item.title}
-              className="cover-image"
-            />
+            <img src={item.cover_image} alt={item.cover_image_alt || item.title} className="cover-image" />
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
               {item.client && (
-                <p className="section-eyebrow">
-                  {item.client}{item.year ? ` · ${item.year}` : ''}
-                </p>
+                <p className="section-eyebrow">{item.client}{item.year ? ` · ${item.year}` : ''}</p>
               )}
               {(item.tags?.length ?? 0) > 0 && (
                 <div className="cover-tags">
@@ -49,9 +71,7 @@ export default async function WorkSlugPage({ params }: Props) {
               <h1 className="cover-title">{item.title}<span className="text-orange">.</span></h1>
               {item.excerpt && <p className="cover-excerpt">{item.excerpt}</p>}
               {item.url && (
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="cover-link">
-                  Visit site →
-                </a>
+                <a href={item.url} target="_blank" rel="noopener noreferrer" className="cover-link">Visit site →</a>
               )}
             </div>
           </div>
@@ -71,18 +91,11 @@ export default async function WorkSlugPage({ params }: Props) {
       )}
 
       {item.video_url && (
-  <section className="section" style={{ background: 'var(--bg2)' }}>
-    <p className="section-label">Project video</p>
-    <video
-  src={item.video_url}
-  autoPlay
-  muted
-  loop
-  playsInline
-  className="work-video"
-/>
-  </section>
-)}
+        <section className="section" style={{ background: 'var(--bg2)' }}>
+          <p className="section-label">Project video</p>
+          <video src={item.video_url} autoPlay muted loop playsInline className="work-video" />
+        </section>
+      )}
 
       {results.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)' }}>
