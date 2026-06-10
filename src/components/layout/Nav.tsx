@@ -40,7 +40,6 @@ export default function Nav() {
 
         {/* Right side — Let's talk + MENU */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <Link href="/contact" className="nav-cta">Let&apos;s talk</Link>
           <button
             className="nav-hamburger"
             onClick={() => setOpen(o => !o)}
