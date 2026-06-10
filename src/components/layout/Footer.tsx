@@ -12,6 +12,35 @@ interface Settings {
   linkedin_url?: string
 }
 
+const FacebookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+)
+
+const InstagramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+)
+
+const LinkedInIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect x="2" y="9" width="4" height="12"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+)
+
+const WhatsAppIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.83L.057 23.86l6.198-1.438A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.371l-.36-.214-3.68.853.88-3.574-.234-.373A9.818 9.818 0 1 1 12 21.818z"/>
+  </svg>
+)
+
 export default function Footer() {
   const [settings, setSettings] = useState<Settings>({})
 
@@ -25,34 +54,30 @@ export default function Footer() {
   const address = settings.address || ''
 
   const socials = [
-    settings.facebook_url && { label: 'Facebook', href: settings.facebook_url },
-    settings.instagram_url && { label: 'Instagram', href: settings.instagram_url },
-    settings.linkedin_url && { label: 'LinkedIn', href: settings.linkedin_url },
-  ].filter(Boolean) as { label: string; href: string }[]
+  settings.facebook_url && { label: 'Facebook', href: settings.facebook_url, Icon: FacebookIcon },
+  settings.instagram_url && { label: 'Instagram', href: settings.instagram_url, Icon: InstagramIcon },
+  settings.linkedin_url && { label: 'LinkedIn', href: settings.linkedin_url, Icon: LinkedInIcon },
+  { label: 'WhatsApp', href: 'https://api.whatsapp.com/send?phone=441442967775&text=Help%20Please', Icon: WhatsAppIcon },
+].filter(Boolean) as { label: string; href: string; Icon: () => JSX.Element }[]
 
   return (
     <footer className="footer">
       <div className="footer-grid">
-        {/* Brand col */}
         <div>
           <Link href="/" className="footer-logo">Rufus<span>.</span></Link>
           <p className="footer-tagline">Award-winning web design &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
           {socials.length > 0 && (
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-              {socials.map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  style={{ fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'var(--font-heading)', fontWeight: 700, letterSpacing: '0.05em', transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-                >
-                  {s.label}
+            <div className="footer-socials">
+              {socials.map(({ label, href, Icon }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                  aria-label={label} className="footer-social-icon">
+                  <Icon />
                 </a>
               ))}
             </div>
           )}
         </div>
 
-        {/* Services col */}
         <div>
           <p className="footer-col-title">Services</p>
           <ul className="footer-links">
@@ -62,7 +87,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Company col */}
         <div>
           <p className="footer-col-title">Company</p>
           <ul className="footer-links">
@@ -74,28 +98,15 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact col */}
         <div>
           <p className="footer-col-title">Contact</p>
           <ul className="footer-links">
-            <li>
-              <a href={`mailto:${email}`} style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-              >{email}</a>
-            </li>
-            {phone && (
-              <li>
-                <a href={`tel:${phone}`} style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-                >{phone}</a>
-              </li>
-            )}
+            <li><a href={`mailto:${email}`} className="footer-link-muted">{email}</a></li>
+            {phone && <li><a href={`tel:${phone}`} className="footer-link-muted">{phone}</a></li>}
             {address && (
-              <li style={{ color: 'var(--muted)', fontSize: '0.875rem', lineHeight: 1.7, marginTop: '0.25rem' }}>
+              <li className="footer-address">
                 {address.split(',').map((part, i) => (
-                  <span key={i} style={{ display: 'block', color: 'var(--muted)' }}>{part.trim()}</span>
+                  <span key={i}>{part.trim()}</span>
                 ))}
               </li>
             )}
@@ -103,18 +114,11 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Rufus Design Limited. All rights reserved.</p>
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <Link href="/privacy" style={{ color: 'var(--muted)', fontSize: '0.8rem', transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-          >Privacy Policy</Link>
-          <Link href="/terms" style={{ color: 'var(--muted)', fontSize: '0.8rem', transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-          >Terms &amp; Conditions</Link>
+        <div className="footer-legal">
+          <Link href="/privacy" className="footer-link-muted">Privacy Policy</Link>
+          <Link href="/terms" className="footer-link-muted">Terms &amp; Conditions</Link>
         </div>
       </div>
     </footer>
