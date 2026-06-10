@@ -146,7 +146,7 @@ export default async function AboutPage() {
 
       {/* Our Story */}
       <section className="section article-body" style={{ background: 'var(--bg)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(3rem, 6vw, 6rem)', alignItems: 'start', maxWidth: '1100px' }}>
+        <div className="about-story-grid">
           <div>
             <p className="section-label">Est. 2007</p>
             <h2>Our story<span className="dot">.</span></h2>
