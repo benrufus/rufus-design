@@ -3,12 +3,15 @@ import PageHero from '@/components/ui/PageHero'
 import WorkGrid from '@/components/sections/WorkGrid'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
-import { getWork } from '@/lib/db'
+import { getWork, getPageSeo } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'Our Work | Rufus Design',
-  description: 'From website design to results-driven digital marketing, we help businesses across Hertfordshire and London grow online.',
-  alternates: { canonical: '/work' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('work').catch(() => null)
+  return {
+    title: seo?.title || 'Our Work',
+    description: seo?.description || 'From website design to results-driven digital marketing, we help businesses across Hertfordshire and London grow online.',
+    alternates: { canonical: '/work' },
+  }
 }
 export const revalidate = 60
 
