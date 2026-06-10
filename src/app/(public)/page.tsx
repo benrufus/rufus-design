@@ -3,13 +3,16 @@ import SectionRenderer from '@/components/sections/SectionRenderer'
 import {
   getHomePage, getWork, getPosts, getTestimonials,
   getServices, getStats, getMarqueeItems, getContactForm,
-  getSiteSettings, getPageSections, getLogoStrips
+  getSiteSettings, getPageSections, getLogoStrips, getPageSeo
 } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'Rufus Design | Web Design Berkhamsted',
-  description: 'Award-winning web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
-  alternates: { canonical: '/' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('home').catch(() => null)
+  return {
+    title: seo?.title || 'Web Design Berkhamsted',
+    description: seo?.description || 'Award-winning web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
+    alternates: { canonical: '/' },
+  }
 }
 
 export const revalidate = 0
