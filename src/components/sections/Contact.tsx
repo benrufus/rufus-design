@@ -1,6 +1,15 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useReveal } from '@/lib/useReveal'
+
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (cb: () => void) => void
+      execute: (key: string, options: { action: string }) => Promise<string>
+    }
+  }
+}
 
 interface ContactProps {
   phone?: string
@@ -16,11 +25,34 @@ export default function Contact({ phone, email }: ContactProps) {
   const displayEmail = email || 'hello@rufusdesign.co.uk'
   const displayPhone = phone || '01442 967775'
 
+  useEffect(() => {
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    if (!siteKey) return
+    const script = document.createElement('script')
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`
+    script.async = true
+    document.head.appendChild(script)
+    return () => { document.head.removeChild(script) }
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
     try {
-      const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+      let recaptchaToken = ''
+      if (siteKey && window.grecaptcha) {
+        recaptchaToken = await new Promise<string>((resolve, reject) => {
+          window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(siteKey, { action: 'contact' }).then(resolve).catch(reject)
+          })
+        })
+      }
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, recaptchaToken }),
+      })
       setStatus(res.ok ? 'sent' : 'error')
     } catch { setStatus('error') }
   }
