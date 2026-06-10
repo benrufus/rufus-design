@@ -14,13 +14,13 @@ interface Result { metric: string; value: string }
 interface WorkItem {
   id?: string; title: string; slug: string; client: string; year: number | ''; url: string
   tags: string[]; excerpt: string; cover_image: string; cover_image_alt: string; body: string
-  gallery: GalleryImage[]; results: Result[]
+  gallery: GalleryImage[]; results: Result[]; video_url: string
   featured: boolean; published: boolean; sort_order: number
 }
 
 const empty: WorkItem = {
   title: '', slug: '', client: '', year: '', url: '', tags: [], excerpt: '',
-  cover_image: '', cover_image_alt: '', body: '', gallery: [], results: [],
+  cover_image: '', cover_image_alt: '', body: '', gallery: [], results: [], video_url: '',
   featured: false, published: true, sort_order: 0
 }
 
@@ -31,8 +31,9 @@ export default function WorkEditor() {
   const { show } = useToast()
   const [item, setItem] = useState<WorkItem>(empty)
   const [saving, setSaving] = useState(false)
-  const [tab, setTab] = useState<'details' | 'content' | 'gallery' | 'results'>('details')
-  const galleryUploadRef = useRef<HTMLInputElement>(null)
+  const [tab, setTab] = useState<'details' | 'content' | 'gallery' | 'video' | 'results'>('details')
+  const [videoUploading, setVideoUploading] = useState(false)
+  const videoInputRef = useRef<HTMLInputElement>(null)
   const isNew = id === 'new'
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function WorkEditor() {
           gallery: data.gallery || [],
           results: data.results || [],
           cover_image_alt: data.cover_image_alt || '',
+          video_url: data.video_url || '',
         })
       })
     }
@@ -67,28 +69,26 @@ export default function WorkEditor() {
   }
 
   const toggleTag = (tag: string) => set('tags', item.tags.includes(tag) ? item.tags.filter(t => t !== tag) : [...item.tags, tag])
-
-  const addGalleryImage = (url: string) => {
-    set('gallery', [...item.gallery, { url, alt: '' }])
-  }
-
-  const updateGalleryAlt = (i: number, alt: string) => {
-    const updated = item.gallery.map((img, idx) => idx === i ? { ...img, alt } : img)
-    set('gallery', updated)
-  }
-
-  const removeGalleryImage = (i: number) => {
-    set('gallery', item.gallery.filter((_, idx) => idx !== i))
-  }
-
+  const addGalleryImage = (url: string) => set('gallery', [...item.gallery, { url, alt: '' }])
+  const updateGalleryAlt = (i: number, alt: string) => set('gallery', item.gallery.map((img, idx) => idx === i ? { ...img, alt } : img))
+  const removeGalleryImage = (i: number) => set('gallery', item.gallery.filter((_, idx) => idx !== i))
   const addResult = () => set('results', [...item.results, { metric: '', value: '' }])
-
-  const updateResult = (i: number, field: 'metric' | 'value', val: string) => {
-    const updated = item.results.map((r, idx) => idx === i ? { ...r, [field]: val } : r)
-    set('results', updated)
-  }
-
+  const updateResult = (i: number, field: 'metric' | 'value', val: string) => set('results', item.results.map((r, idx) => idx === i ? { ...r, [field]: val } : r))
   const removeResult = (i: number) => set('results', item.results.filter((_, idx) => idx !== i))
+
+  const uploadVideo = async (file: File) => {
+    setVideoUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      form.append('folder', 'work/videos')
+      const res = await fetch('/api/upload', { method: 'POST', body: form })
+      const json = await res.json()
+      if (json.url) { set('video_url', json.url); show('Video uploaded! Click Save.', 'success') }
+      else show(json.error || 'Upload failed', 'error')
+    } catch { show('Video upload failed', 'error') }
+    setVideoUploading(false)
+  }
 
   const TAB = (t: typeof tab) => ({
     padding: '0.5rem 1rem',
@@ -119,39 +119,23 @@ export default function WorkEditor() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <button style={TAB('details')} onClick={() => setTab('details')}>📋 Details</button>
         <button style={TAB('content')} onClick={() => setTab('content')}>📝 Content</button>
-        <button style={TAB('gallery')} onClick={() => setTab('gallery')}>🖼 Gallery {item.gallery.length > 0 && `(${item.gallery.length})`}</button>
-        <button style={TAB('results')} onClick={() => setTab('results')}>📊 Results {item.results.length > 0 && `(${item.results.length})`}</button>
+        <button style={TAB('gallery')} onClick={() => setTab('gallery')}>🖼 Gallery{item.gallery.length > 0 ? ` (${item.gallery.length})` : ''}</button>
+        <button style={TAB('video')} onClick={() => setTab('video')}>🎬 Video{item.video_url ? ' ✓' : ''}</button>
+        <button style={TAB('results')} onClick={() => setTab('results')}>📊 Results{item.results.length > 0 ? ` (${item.results.length})` : ''}</button>
       </div>
 
-      {/* DETAILS TAB */}
       {tab === 'details' && (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="field">
-              <label>Project title *</label>
-              <input value={item.title} onChange={e => { set('title', e.target.value); if (isNew) set('slug', slugify(e.target.value)) }} />
-            </div>
-            <div className="field">
-              <label>URL slug</label>
-              <input value={item.slug} onChange={e => set('slug', e.target.value)} />
-            </div>
-            <div className="field">
-              <label>Client name</label>
-              <input value={item.client || ''} onChange={e => set('client', e.target.value)} />
-            </div>
-            <div className="field">
-              <label>Year</label>
-              <input type="number" value={item.year || ''} onChange={e => set('year', e.target.value ? parseInt(e.target.value) : '')} />
-            </div>
+            <div className="field"><label>Project title *</label><input value={item.title} onChange={e => { set('title', e.target.value); if (isNew) set('slug', slugify(e.target.value)) }} /></div>
+            <div className="field"><label>URL slug</label><input value={item.slug} onChange={e => set('slug', e.target.value)} /></div>
+            <div className="field"><label>Client name</label><input value={item.client || ''} onChange={e => set('client', e.target.value)} /></div>
+            <div className="field"><label>Year</label><input type="number" value={item.year || ''} onChange={e => set('year', e.target.value ? parseInt(e.target.value) : '')} /></div>
           </div>
-          <div className="field">
-            <label>Live URL</label>
-            <input value={item.url || ''} onChange={e => set('url', e.target.value)} placeholder="https://example.co.uk" />
-          </div>
+          <div className="field"><label>Live URL</label><input value={item.url || ''} onChange={e => set('url', e.target.value)} placeholder="https://example.co.uk" /></div>
           <div className="field">
             <label>Services / Tags</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -163,19 +147,12 @@ export default function WorkEditor() {
               ))}
             </div>
           </div>
-          <div className="field">
-            <label>Short description (shown in listings)</label>
-            <textarea value={item.excerpt || ''} onChange={e => set('excerpt', e.target.value)} rows={2} />
-          </div>
+          <div className="field"><label>Short description</label><textarea value={item.excerpt || ''} onChange={e => set('excerpt', e.target.value)} rows={2} /></div>
           <ImageUpload value={item.cover_image || ''} onChange={url => set('cover_image', url)} folder="work" label="Cover image (1400×700px recommended)" />
-          <div className="field">
-            <label>Cover image alt text</label>
-            <input value={item.cover_image_alt || ''} onChange={e => set('cover_image_alt', e.target.value)} placeholder="Describe the cover image for accessibility and SEO" />
-          </div>
+          <div className="field"><label>Cover image alt text</label><input value={item.cover_image_alt || ''} onChange={e => set('cover_image_alt', e.target.value)} placeholder="Describe the cover image for SEO" /></div>
         </>
       )}
 
-      {/* CONTENT TAB */}
       {tab === 'content' && (
         <div className="field">
           <label>Case study body</label>
@@ -183,56 +160,63 @@ export default function WorkEditor() {
         </div>
       )}
 
-      {/* GALLERY TAB */}
       {tab === 'gallery' && (
         <div>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-            Add project screenshots and images. Each image needs an alt text for SEO and accessibility.
-          </p>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Add project screenshots. Each needs alt text for SEO.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
             {item.gallery.map((img, i) => (
               <div key={i} className="card-sm" style={{ display: 'grid', gridTemplateColumns: '120px 1fr auto', gap: '1rem', alignItems: 'center' }}>
                 <img src={img.url} alt={img.alt} style={{ width: '120px', height: '75px', objectFit: 'cover', borderRadius: '4px' }} />
-                <div className="field" style={{ margin: 0 }}>
-                  <label>Alt text</label>
-                  <input value={img.alt} onChange={e => updateGalleryAlt(i, e.target.value)} placeholder="Describe this image..." />
-                </div>
+                <div className="field" style={{ margin: 0 }}><label>Alt text</label><input value={img.alt} onChange={e => updateGalleryAlt(i, e.target.value)} placeholder="Describe this image..." /></div>
                 <button className="btn btn-danger btn-sm" onClick={() => removeGalleryImage(i)}>✕</button>
               </div>
             ))}
           </div>
-          <ImageUpload
-            value=""
-            onChange={url => { if (url) addGalleryImage(url) }}
-            folder="work"
-            label="Upload gallery image"
-          />
+          <ImageUpload value="" onChange={url => { if (url) addGalleryImage(url) }} folder="work" label="Upload gallery image" />
         </div>
       )}
 
-      {/* RESULTS TAB */}
+      {tab === 'video' && (
+        <div>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Upload a video to Supabase storage. MP4 recommended, max 50MB.</p>
+          {item.video_url ? (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <video src={item.video_url} controls style={{ width: '100%', maxHeight: '400px', background: '#000', borderRadius: '6px' }} />
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
+                <button className="btn btn-ghost btn-sm" onClick={() => videoInputRef.current?.click()}>Replace video</button>
+                <button className="btn btn-danger btn-sm" onClick={() => set('video_url', '')}>Remove video</button>
+              </div>
+            </div>
+          ) : (
+            <div className="image-upload" onClick={() => videoInputRef.current?.click()} style={{ cursor: 'pointer' }}>
+              {videoUploading ? (
+                <p style={{ color: 'rgba(255,255,255,0.4)' }}>Uploading... this may take a moment</p>
+              ) : (
+                <>
+                  <p style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎬</p>
+                  <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Click to upload video</p>
+                  <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.75rem', marginTop: '0.25rem' }}>MP4, MOV, WebM supported</p>
+                </>
+              )}
+            </div>
+          )}
+          <input ref={videoInputRef} type="file" accept="video/mp4,video/mov,video/webm,video/quicktime" style={{ display: 'none' }}
+            onChange={e => e.target.files?.[0] && uploadVideo(e.target.files[0])} />
+        </div>
+      )}
+
       {tab === 'results' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' }}>
-              Key metrics shown as stats on the project page.
-            </p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' }}>Key metrics shown as stats on the project page.</p>
             <button className="btn btn-ghost btn-sm" onClick={addResult}>+ Add result</button>
           </div>
-          {item.results.length === 0 && (
-            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.85rem' }}>No results yet. Click "+ Add result" to add one.</p>
-          )}
+          {item.results.length === 0 && <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.85rem' }}>No results yet.</p>}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {item.results.map((r, i) => (
               <div key={i} className="card-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '1rem', alignItems: 'end' }}>
-                <div className="field" style={{ margin: 0 }}>
-                  <label>Value</label>
-                  <input value={r.value} onChange={e => updateResult(i, 'value', e.target.value)} placeholder="e.g. 300%" />
-                </div>
-                <div className="field" style={{ margin: 0 }}>
-                  <label>Metric</label>
-                  <input value={r.metric} onChange={e => updateResult(i, 'metric', e.target.value)} placeholder="e.g. Increase in enquiries" />
-                </div>
+                <div className="field" style={{ margin: 0 }}><label>Value</label><input value={r.value} onChange={e => updateResult(i, 'value', e.target.value)} placeholder="e.g. 300%" /></div>
+                <div className="field" style={{ margin: 0 }}><label>Metric</label><input value={r.metric} onChange={e => updateResult(i, 'metric', e.target.value)} placeholder="e.g. Increase in enquiries" /></div>
                 <button className="btn btn-danger btn-sm" onClick={() => removeResult(i)}>✕</button>
               </div>
             ))}
