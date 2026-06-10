@@ -30,9 +30,9 @@ export async function getSeoSettings() {
   return data
 }
 
-export async function getPageSeo(page_key: string) {
+export async function getPageSeo(pageKey: string) {
   const sb = await createClient()
-  const { data } = await sb.from('page_seo').select('*').eq('page_key', page_key).single()
+  const { data } = await sb.from('page_seo').select('*').eq('page_key', pageKey).maybeSingle()
   return data
 }
 
