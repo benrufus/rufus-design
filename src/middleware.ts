@@ -7,7 +7,6 @@ export async function middleware(request: NextRequest) {
   }
 
   let supabaseResponse = NextResponse.next({ request })
-
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -26,25 +25,22 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  // Check redirects table first (for all non-CMS routes)
   if (!path.startsWith('/760') && !path.startsWith('/api') && !path.startsWith('/_next')) {
     const { data: redirect } = await supabase
       .from('redirects')
-      .select('destination, type')
-      .eq('source', path)
-      .eq('active', true)
+      .select('"to", permanent')
+      .eq('"from"', path)
       .single()
 
     if (redirect) {
       const dest = request.nextUrl.clone()
-      dest.pathname = redirect.destination
-      return NextResponse.redirect(dest, { status: redirect.type || 301 })
+      dest.pathname = redirect.to
+      return NextResponse.redirect(dest, { status: redirect.permanent ? 301 : 302 })
     }
   }
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protect all /760 routes except /760/login
   if (path.startsWith('/760') && path !== '/760/login') {
     if (!user) {
       const loginUrl = request.nextUrl.clone()
@@ -53,7 +49,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Redirect logged-in users away from login page
   if (path === '/760/login' && user) {
     const dashboardUrl = request.nextUrl.clone()
     dashboardUrl.pathname = '/760'
@@ -64,7 +59,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|icon.png).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.png).*)'],
 }
