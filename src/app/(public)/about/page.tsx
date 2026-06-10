@@ -116,7 +116,7 @@ export default async function AboutPage() {
                 </Link>
               ))}
             </div>
-            <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
+            <div className="services-cta" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
               <Link href="/work" className="btn-primary">See our work</Link>
               <Link href="/contact" className="btn-secondary">Get in touch</Link>
             </div>
