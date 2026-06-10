@@ -154,11 +154,17 @@ export default function WorkEditor() {
       )}
 
       {tab === 'content' && (
-        <div className="field">
-          <label>Case study body</label>
-          <RichTextEditor value={item.body || ''} onChange={html => set('body', html)} placeholder="Write the full case study here..." />
-        </div>
-      )}
+  <div className="field">
+    <label>Case study body (HTML)</label>
+    <textarea
+      value={item.body || ''}
+      onChange={e => set('body', e.target.value)}
+      rows={20}
+      style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
+      placeholder="<h2>Section heading</h2>&#10;<p>Your paragraph text here...</p>"
+    />
+  </div>
+)}
 
       {tab === 'gallery' && (
         <div>
