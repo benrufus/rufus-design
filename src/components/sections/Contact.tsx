@@ -79,6 +79,16 @@ export default function Contact({ phone, email }: ContactProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="contact-form">
+        {/* Honeypot — invisible to humans, bots fill it in */}
+        <input
+          type="text"
+          name="_honey"
+          id="_honey"
+          tabIndex={-1}
+          autoComplete="off"
+          style={{ opacity: 0, position: 'absolute', top: 0, left: 0, height: 0, width: 0, zIndex: -1 }}
+        />
+
         {status === 'sent' ? (
           <div className="contact-success">
             ✓ Message sent — we&apos;ll be in touch shortly.
@@ -86,32 +96,32 @@ export default function Contact({ phone, email }: ContactProps) {
         ) : (
           <>
             <div className="contact-name-row">
-  <div className="contact-field">
-    <label htmlFor="firstName" className="contact-label">First name</label>
-    <input id="firstName" name="firstName" type="text" className="contact-input" placeholder="Jane"
-      value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} />
-  </div>
-  <div className="contact-field">
-    <label htmlFor="lastName" className="contact-label">Last name</label>
-    <input id="lastName" name="lastName" type="text" className="contact-input" placeholder="Smith"
-      value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} />
-  </div>
-</div>
-<div className="contact-field">
-  <label htmlFor="company" className="contact-label">Company</label>
-  <input id="company" name="company" type="text" className="contact-input" placeholder="Smith & Co Ltd"
-    value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
-</div>
-<div className="contact-field">
-  <label htmlFor="email" className="contact-label">Email address *</label>
-  <input id="email" name="email" type="email" className="contact-input" placeholder="jane@smithco.com" required
-    value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-</div>
-<div className="contact-field">
-  <label htmlFor="message" className="contact-label">Message</label>
-  <textarea id="message" name="message" className="contact-input contact-textarea" placeholder="Tell us about your project..." required rows={5}
-    value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
-</div>
+              <div className="contact-field">
+                <label htmlFor="firstName" className="contact-label">First name</label>
+                <input id="firstName" name="firstName" type="text" className="contact-input" placeholder="Jane"
+                  value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} />
+              </div>
+              <div className="contact-field">
+                <label htmlFor="lastName" className="contact-label">Last name</label>
+                <input id="lastName" name="lastName" type="text" className="contact-input" placeholder="Smith"
+                  value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} />
+              </div>
+            </div>
+            <div className="contact-field">
+              <label htmlFor="company" className="contact-label">Company</label>
+              <input id="company" name="company" type="text" className="contact-input" placeholder="Smith & Co Ltd"
+                value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
+            </div>
+            <div className="contact-field">
+              <label htmlFor="email" className="contact-label">Email address *</label>
+              <input id="email" name="email" type="email" className="contact-input" placeholder="jane@smithco.com" required
+                value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+            </div>
+            <div className="contact-field">
+              <label htmlFor="message" className="contact-label">Message</label>
+              <textarea id="message" name="message" className="contact-input contact-textarea" placeholder="Tell us about your project..." required rows={5}
+                value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
+            </div>
             {status === 'error' && <p className="contact-error">Something went wrong — please email us directly.</p>}
             <button type="submit" disabled={status === 'sending'} className="btn-primary contact-submit">
               {status === 'sending' ? 'Sending...' : 'Send message'}
