@@ -2,12 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
-import { getLocations, getSiteSettings } from '@/lib/db'
+import { getLocations, getSiteSettings, getPageSeo } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'Where We Operate | Rufus Design',
-  description: 'Web design across Hertfordshire, Buckinghamshire and beyond.',
-  alternates: { canonical: '/where-we-operate' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('where-we-operate').catch(() => null)
+  return {
+    title: seo?.title || 'Where We Operate',
+    description: seo?.description || 'Web design across Hertfordshire, Buckinghamshire and beyond.',
+    alternates: { canonical: '/where-we-operate' },
+  }
 }
 export const revalidate = 0
 
