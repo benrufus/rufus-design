@@ -19,12 +19,8 @@ export default function About({ heading, body, stats, quote }: AboutProps) {
   const displayStats = stats?.length ? stats : DEFAULT_STATS
 
   return (
-    <section
-      ref={sectionRef as React.RefObject<HTMLElement>}
-      className="about-section reveal"
-    >
-      <div className="about-bg-glow" ref={bgRef} />
-
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="about-section reveal">
+      <div ref={bgRef} className="about-bg-glow" />
       <div className="about-left">
         <p className="section-eyebrow">About Rufus</p>
         <AnimatedHeading className="about-heading">
@@ -35,7 +31,6 @@ export default function About({ heading, body, stats, quote }: AboutProps) {
         </p>
         <a href="/contact" className="btn-primary">Start a project</a>
       </div>
-
       <div className="about-right">
         <div className="about-stats">
           {displayStats.map(s => (
