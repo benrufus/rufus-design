@@ -2,10 +2,19 @@
 import { useState } from 'react'
 import { useReveal } from '@/lib/useReveal'
 
-export default function Contact() {
-  const revealRef = useReveal()
+interface ContactProps {
+  phone?: string
+  email?: string
+  fields?: any[]
+}
+
+export default function Contact({ phone, email }: ContactProps) {
+  const { ref, visible } = useReveal()
   const [form, setForm] = useState({ firstName: '', lastName: '', company: '', email: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  const displayEmail = email || 'hello@rufusdesign.co.uk'
+  const displayPhone = phone || '01442 967775'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,7 +26,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" ref={revealRef as React.RefObject<HTMLElement>} className="contact-section reveal">
+    <section id="contact" ref={ref as React.RefObject<HTMLElement>} className={`contact-section${visible ? ' visible' : ''}`}>
       <div className="contact-info">
         <p className="section-eyebrow">Get in touch</p>
         <h2 className="contact-heading">Let&apos;s<br /><span className="text-orange">talk.</span></h2>
@@ -26,8 +35,8 @@ export default function Contact() {
         </p>
         <div className="contact-links">
           {[
-            ['mailto:hello@rufusdesign.co.uk', 'hello@rufusdesign.co.uk'],
-            ['tel:01442967775', '01442 967775'],
+            ['mailto:' + displayEmail, displayEmail],
+            ['tel:' + displayPhone.replace(/\s/g, ''), displayPhone],
             ['https://calendly.com/ben-rufusdesign/30min', 'Book a meeting online'],
           ].map(([href, label]) => (
             <a key={href} href={href} className="contact-link">
@@ -47,65 +56,32 @@ export default function Contact() {
             <div className="contact-name-row">
               <div className="contact-field">
                 <label className="contact-label">First name</label>
-                <input
-                  type="text"
-                  className="contact-input"
-                  placeholder="Jane"
-                  value={form.firstName}
-                  onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
-                />
+                <input type="text" className="contact-input" placeholder="Jane"
+                  value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} />
               </div>
               <div className="contact-field">
                 <label className="contact-label">Last name</label>
-                <input
-                  type="text"
-                  className="contact-input"
-                  placeholder="Smith"
-                  value={form.lastName}
-                  onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
-                />
+                <input type="text" className="contact-input" placeholder="Smith"
+                  value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} />
               </div>
             </div>
             <div className="contact-field">
               <label className="contact-label">Company</label>
-              <input
-                type="text"
-                className="contact-input"
-                placeholder="Smith & Co Ltd"
-                value={form.company}
-                onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-              />
+              <input type="text" className="contact-input" placeholder="Smith & Co Ltd"
+                value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
             </div>
             <div className="contact-field">
               <label className="contact-label">Email address *</label>
-              <input
-                type="email"
-                className="contact-input"
-                placeholder="jane@smithco.com"
-                required
-                value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              />
+              <input type="email" className="contact-input" placeholder="jane@smithco.com" required
+                value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
             </div>
             <div className="contact-field">
               <label className="contact-label">Message</label>
-              <textarea
-                className="contact-input contact-textarea"
-                placeholder="Tell us about your project..."
-                required
-                rows={5}
-                value={form.message}
-                onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-              />
+              <textarea className="contact-input contact-textarea" placeholder="Tell us about your project..." required rows={5}
+                value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
             </div>
-            {status === 'error' && (
-              <p className="contact-error">Something went wrong — please email us directly.</p>
-            )}
-            <button
-              type="submit"
-              disabled={status === 'sending'}
-              className="btn-primary contact-submit"
-            >
+            {status === 'error' && <p className="contact-error">Something went wrong — please email us directly.</p>}
+            <button type="submit" disabled={status === 'sending'} className="btn-primary contact-submit">
               {status === 'sending' ? 'Sending...' : 'Send message'}
             </button>
           </>
