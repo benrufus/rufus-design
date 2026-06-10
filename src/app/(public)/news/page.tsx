@@ -3,12 +3,15 @@ import PageHero from '@/components/ui/PageHero'
 import News from '@/components/sections/News'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
-import { getPosts } from '@/lib/db'
+import { getPosts, getPageSeo } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'News & Blog | Rufus Design',
-  description: 'Web design tips, digital marketing insights and agency news from Rufus Design in Berkhamsted.',
-  alternates: { canonical: '/news' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('news').catch(() => null)
+  return {
+    title: seo?.title || 'News & Blog',
+    description: seo?.description || 'Web design tips, digital marketing insights and agency news from Rufus Design in Berkhamsted.',
+    alternates: { canonical: '/news' },
+  }
 }
 export const revalidate = 60
 
