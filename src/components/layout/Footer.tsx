@@ -65,7 +65,7 @@ export default function Footer() {
       <div className="footer-grid">
         <div>
           <Link href="/" className="footer-logo">Rufus<span>.</span></Link>
-          <p className="footer-tagline">Award-winning web design &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
+          <p className="footer-tagline">Web design &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
           {socials.length > 0 && (
             <div className="footer-socials">
               {socials.map(({ label, href, Icon }) => (
@@ -79,13 +79,16 @@ export default function Footer() {
         </div>
 
         <div>
-          <p className="footer-col-title">Services</p>
-          <ul className="footer-links">
-            {['Web Design', 'Digital Marketing', 'SEO', 'PPC', 'Hosting'].map(s => (
-              <li key={s}><Link href="/contact">{s}</Link></li>
-            ))}
-          </ul>
-        </div>
+  <p className="footer-col-title">Services</p>
+  <ul className="footer-links">
+    <li><Link href="/services/web-design">Web Design</Link></li>
+    <li><Link href="/services/digital-marketing">Digital Marketing</Link></li>
+    <li><Link href="/services/seo">SEO</Link></li>
+    <li><Link href="/services/ppc">PPC</Link></li>
+    <li><Link href="/services/managed-hosting">Hosting</Link></li>
+    <li><Link href="/services">All Services</Link></li>
+  </ul>
+</div>
 
         <div>
           <p className="footer-col-title">Company</p>
