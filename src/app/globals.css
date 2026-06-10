@@ -717,3 +717,162 @@ button { cursor: none; font-family: var(--font-body); }
   color: rgba(255,255,255,0.4);
   writing-mode: vertical-rl;
 }
+
+/* ─── About ──────────────────────────────────────────── */
+.about-section {
+  padding: clamp(4rem,8vw,8rem) clamp(1.5rem,4vw,3rem);
+  background: #141414;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .about-section { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+.about-bg-glow {
+  position: absolute;
+  top: -30%; right: -5%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,128,0,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  will-change: transform;
+}
+.about-left { position: relative; z-index: 1; }
+.about-heading {
+  font-family: var(--font-raleway);
+  font-weight: 800;
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+.about-body {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 400px;
+  margin-bottom: 2rem;
+}
+.about-right { position: relative; z-index: 1; }
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 400px) {
+  .about-stats { grid-template-columns: 1fr; }
+}
+.about-stat { border-left: 2px solid #ff8000; padding-left: 1.5rem; }
+.about-stat-value {
+  font-family: var(--font-raleway);
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.about-stat-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.25rem;
+}
+.about-quote {
+  padding: 1.75rem;
+  background: rgba(255,128,0,0.08);
+  border-left: 2px solid #ff8000;
+  font-family: var(--font-raleway);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+}
+
+/* ─── Contact ─────────────────────────────────────────── */
+.contact-section {
+  padding: clamp(4rem,8vw,8rem) clamp(1.5rem,4vw,3rem);
+  background: #0d0d0d;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .contact-section { grid-template-columns: 1fr; gap: 3rem; }
+}
+.contact-heading {
+  font-family: var(--font-raleway);
+  font-weight: 800;
+  font-size: clamp(3rem,7vw,6rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+.contact-subtext {
+  color: rgba(255,255,255,0.45);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  max-width: 340px;
+  margin-bottom: 2rem;
+}
+.contact-links { display: flex; flex-direction: column; gap: 0.75rem; }
+.contact-link {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: color 0.25s;
+}
+.contact-link:hover { color: #fff; }
+.contact-link-arrow { color: #ff8000; }
+.contact-form { display: flex; flex-direction: column; gap: 1rem; }
+.contact-name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 480px) {
+  .contact-name-row { grid-template-columns: 1fr; }
+}
+.contact-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.contact-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.contact-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 0.875rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.25s;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.contact-input:focus { border-color: #ff8000; }
+.contact-input::placeholder { color: rgba(255,255,255,0.2); }
+.contact-textarea { resize: vertical; }
+.contact-success {
+  padding: 2rem;
+  background: rgba(255,128,0,0.1);
+  border: 1px solid rgba(255,128,0,0.3);
+  font-family: var(--font-raleway);
+  font-weight: 700;
+}
+.contact-error { color: #ff4444; font-size: 0.85rem; }
+.contact-submit { align-self: flex-start; margin-top: 0.5rem; }
+
+/* ─── Shared utilities ───────────────────────────────── */
+.section-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ff8000;
+  margin-bottom: 1rem;
+}
+.text-orange { color: #ff8000; }
