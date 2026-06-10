@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -15,6 +16,14 @@ const nextConfig: NextConfig = {
       dynamic: 0,
       static: 0,
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/sites/:path*',
+        destination: 'https://fjdyhfutrbjlonekigfh.supabase.co/storage/v1/object/public/marketing-assets/sites/:path*',
+      },
+    ]
   },
   headers: async () => [
     {
