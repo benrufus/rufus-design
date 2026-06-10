@@ -2,12 +2,15 @@ import type { Metadata } from 'next'
 import PageHero from '@/components/ui/PageHero'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
-import { getSiteSettings } from '@/lib/db'
+import { getSiteSettings, getPageSeo } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'Contact Us | Rufus Design',
-  description: 'Get in touch with Rufus Design. Based in Berkhamsted, Hertfordshire.',
-  alternates: { canonical: '/contact' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('contact').catch(() => null)
+  return {
+    title: seo?.title || 'Contact Us',
+    description: seo?.description || 'Get in touch with Rufus Design. Based in Berkhamsted, Hertfordshire.',
+    alternates: { canonical: '/contact' },
+  }
 }
 export const revalidate = 60
 
