@@ -396,6 +396,7 @@ blockquote {
   padding: 2.5rem;
   position: relative;
   overflow: hidden;
+  height: 100%;
 }
 .service-card::before {
   content: '';
