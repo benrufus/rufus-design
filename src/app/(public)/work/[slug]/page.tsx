@@ -74,10 +74,13 @@ export default async function WorkSlugPage({ params }: Props) {
   <section className="section" style={{ background: 'var(--bg2)' }}>
     <p className="section-label">Project video</p>
     <video
-      src={item.video_url}
-      controls
-      className="work-video"
-    />
+  src={item.video_url}
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="work-video"
+/>
   </section>
 )}
 
