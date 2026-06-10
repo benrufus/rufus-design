@@ -82,10 +82,10 @@ export default function Footer() {
   <p className="footer-col-title">Services</p>
   <ul className="footer-links">
     <li><Link href="/services/web-design">Web Design</Link></li>
-    <li><Link href="/services/digital-marketing">Digital Marketing</Link></li>
-    <li><Link href="/services/seo">SEO</Link></li>
-    <li><Link href="/services/ppc">PPC</Link></li>
-    <li><Link href="/services/managed-hosting">Hosting</Link></li>
+    <li><Link href="/services/web-development">Web Development</Link></li>
+    <li><Link href="/services/seo-and-ppc">SEO & PPC</Link></li>
+    <li><Link href="/services/managed-hosting">Managed Hosting</Link></li>
+    <li><Link href="/services/graphic-design">Graphic Design</Link></li>
     <li><Link href="/services">All Services</Link></li>
   </ul>
 </div>
