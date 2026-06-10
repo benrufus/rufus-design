@@ -58,7 +58,7 @@ export default function Footer() {
   settings.instagram_url && { label: 'Instagram', href: settings.instagram_url, Icon: InstagramIcon },
   settings.linkedin_url && { label: 'LinkedIn', href: settings.linkedin_url, Icon: LinkedInIcon },
   { label: 'WhatsApp', href: 'https://api.whatsapp.com/send?phone=441442967775&text=Help%20Please', Icon: WhatsAppIcon },
-].filter(Boolean) as { label: string; href: string; Icon: () => JSX.Element }[]
+].filter(Boolean) as { label: string; href: string; Icon: () => React.ReactElement }[]
 
   return (
     <footer className="footer">
