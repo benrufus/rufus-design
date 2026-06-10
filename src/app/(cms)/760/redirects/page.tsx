@@ -85,9 +85,19 @@ export default function RedirectsPage() {
         </div>
       )}
 
-      {items.map(r => (
-        <div key={r.id} className="card-sm" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto auto', gap: '0.75rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <code style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>{r.from}</code>
-          <span style={{ color: 'var(--orange)' }}>→</span>
-          <code style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>{r.to}</code>
-          <span styl
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {items.map(r => (
+          <div key={r.id} className="card-sm" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto auto', gap: '0.75rem', alignItems: 'center' }}>
+            <code style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>{r.from}</code>
+            <span style={{ color: 'var(--orange)' }}>→</span>
+            <code style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>{r.to}</code>
+            <span style={{ fontSize: '0.7rem', background: 'rgba(255,128,0,0.1)', color: 'var(--orange)', padding: '0.2em 0.5em', whiteSpace: 'nowrap' }}>
+              {r.permanent ? '301' : '302'}
+            </span>
+            <button className="btn btn-danger btn-sm" onClick={() => remove(r.id)}>✕</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
