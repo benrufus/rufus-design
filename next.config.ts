@@ -41,7 +41,7 @@ const nextConfig: NextConfig = {
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://calendly.com https://consent.cookiefirst.com https://analytics.rufusdesign.co.uk",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
-            "img-src 'self' data: blob: https://fjdyhfutrbjlonekigfh.supabase.co https://www.google-analytics.com https://www.googletagmanager.com",
+            "img-src 'self' data: blob: https://fjdyhfutrbjlonekigfh.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://consent.cookiefirst.com",
             "media-src 'self' https://fjdyhfutrbjlonekigfh.supabase.co",
             "connect-src 'self' https://fjdyhfutrbjlonekigfh.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://api.brevo.com https://www.google.com/recaptcha/ https://consent.cookiefirst.com https://analytics.rufusdesign.co.uk",
             "frame-src https://www.google.com/recaptcha/ https://calendly.com https://www.googletagmanager.com",
