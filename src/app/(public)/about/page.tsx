@@ -7,13 +7,16 @@ import Contact from '@/components/sections/Contact'
 import LogoStrip from '@/components/ui/LogoStrip'
 import {
   getAboutPage, getTeam, getValues, getStats, getTestimonials,
-  getLogoStrips, getServices, getPageSections, getSiteSettings
+  getLogoStrips, getServices, getPageSections, getSiteSettings, getPageSeo
 } from '@/lib/db'
 
-export const metadata: Metadata = {
-  title: 'About Us | Rufus Design',
-  description: 'Rufus Design is a small yet mighty digital agency based in Berkhamsted, Hertfordshire. Since 2007 we have helped businesses of all sizes grow online.',
-  alternates: { canonical: '/about' },
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo('about').catch(() => null)
+  return {
+    title: seo?.title || 'About Us',
+    description: seo?.description || 'Rufus Design is a web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
+    alternates: { canonical: '/about' },
+  }
 }
 export const revalidate = 0
 
