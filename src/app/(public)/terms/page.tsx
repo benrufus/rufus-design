@@ -54,7 +54,7 @@ export default function TermsPage() {
           <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>9. Contact</h2>
           <p>
             Rufus Design Limited<br />
-            4 Friars Field, Berkhamsted, Hertfordshire<br />
+            6 Puller Road, Hemel Hempstead, Hertfordshire<br />
             <a href="mailto:hello@rufusdesign.co.uk" style={{ color: 'var(--orange)' }}>hello@rufusdesign.co.uk</a>
           </p>
         </div>
