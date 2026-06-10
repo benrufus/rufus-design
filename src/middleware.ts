@@ -29,8 +29,8 @@ export async function middleware(request: NextRequest) {
     const { data: redirect } = await supabase
       .from('redirects')
       .select('"to", permanent')
-      .eq('"from"', path)
-      .single()
+      .eq('from', path)
+      .maybeSingle()
 
     if (redirect) {
       const dest = request.nextUrl.clone()
