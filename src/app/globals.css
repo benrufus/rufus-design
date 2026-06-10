@@ -937,7 +937,6 @@ blockquote {
 /* ─── Article body ───────────────────────────────────── */
 .article-body { background: var(--bg); }
 .article-body > div {
-  max-width: 720px;
   line-height: 1.9;
   color: rgba(255,255,255,0.8);
   font-size: 1.05rem;
