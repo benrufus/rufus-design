@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Contact from '@/components/sections/Contact'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 import { getLocations, getSiteSettings } from '@/lib/db'
 
 export const metadata: Metadata = {
@@ -21,8 +22,26 @@ export default async function WhereWeOperatePage() {
     settings = (siteSettings as any) || {}
   } catch { /* fallback */ }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Where We Operate | Rufus Design',
+    url: `${siteUrl}/where-we-operate`,
+    itemListElement: locationList.map((loc: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: `Web Design ${loc.town}`,
+      url: `${siteUrl}/where-we-operate/${loc.slug}`,
+    })),
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Where We Operate' }]} />
+
       <section className="page-hero" style={{ background: 'var(--bg)' }}>
         <p className="page-hero-label">Where we work</p>
         <h1>Where we operate<span className="dot">.</span></h1>

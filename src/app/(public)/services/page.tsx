@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHero from '@/components/ui/PageHero'
 import Contact from '@/components/sections/Contact'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 import { getServicesPages, getSiteSettings } from '@/lib/db'
 
 export const metadata: Metadata = {
@@ -18,9 +19,26 @@ export default async function ServicesPage() {
 
   const services = (servicesList as any[]) || []
   const settings = siteSettings as any
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Services | Rufus Design',
+    url: `${siteUrl}/services`,
+    itemListElement: services.map((s: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: s.title,
+      description: s.excerpt || '',
+      url: `${siteUrl}/services/${s.slug}`,
+    })),
+  }
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Services' }]} />
       <PageHero
         label="What we do"
         title="Our services"
