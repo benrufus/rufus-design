@@ -3,6 +3,7 @@ import { Raleway, DM_Sans } from 'next/font/google'
 import './globals.css'
 import CustomCursor from '@/components/ui/CustomCursor'
 import GridCanvas from '@/components/ui/GridCanvas'
+import { getSeoSettings } from '@/lib/db'
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -10,7 +11,6 @@ const raleway = Raleway({
   variable: '--font-raleway',
   display: 'swap',
 })
-
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
@@ -24,10 +24,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'),
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const seo = await getSeoSettings().catch(() => null) as any
+
   return (
     <html lang="en" className={`${raleway.variable} ${dmSans.variable}`}>
+      <head>
+        {seo?.google_verification && (
+          <meta name="google-site-verification" content={seo.google_verification} />
+        )}
+        {seo?.head_scripts && (
+          <div dangerouslySetInnerHTML={{ __html: seo.head_scripts }} />
+        )}
+      </head>
       <body>
+        {seo?.body_scripts && (
+          <div dangerouslySetInnerHTML={{ __html: seo.body_scripts }} />
+        )}
         <CustomCursor />
         <div className="grid-canvas-wrap">
           <GridCanvas />
