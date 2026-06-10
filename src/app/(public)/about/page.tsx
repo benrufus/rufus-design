@@ -143,7 +143,7 @@ export default async function AboutPage() {
         intro={ap?.intro || 'A small, focused agency delivering big results since 2007.'}
       />
       {sectionsToRender}
-      <Contact phone={settings?.phone} email={settings?.email} />
+      <Contact />
     </>
   )
 }
