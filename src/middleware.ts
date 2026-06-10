@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   if (!path.startsWith('/760') && !path.startsWith('/api') && !path.startsWith('/_next')) {
     const { data: redirect } = await supabase
       .from('redirects')
-      .select('"to", permanent')
+      .select('to, permanent')
       .eq('from', path)
       .maybeSingle()
 
