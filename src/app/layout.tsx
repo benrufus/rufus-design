@@ -30,25 +30,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${raleway.variable} ${dmSans.variable}`}>
       <head>
-        {seo?.google_verification && (
-          <meta name="google-site-verification" content={seo.google_verification} />
-        )}
-        {seo?.head_scripts && (
-          <div dangerouslySetInnerHTML={{ __html: seo.head_scripts }} />
-        )}
-      </head>
-      <body>
-        {seo?.body_scripts && (
-          <div dangerouslySetInnerHTML={{ __html: seo.body_scripts }} />
-        )}
-        <CustomCursor />
-        <div className="grid-canvas-wrap">
-          <GridCanvas />
-        </div>
-        <div className="site-wrap">
-          {children}
-        </div>
-      </body>
+  {seo?.google_verification && (
+    <meta name="google-site-verification" content={seo.google_verification} />
+  )}
+</head>
+<body>
+  {seo?.head_scripts && (
+    <div dangerouslySetInnerHTML={{ __html: seo.head_scripts }} />
+  )}
+  {seo?.body_scripts && (
+    <div dangerouslySetInnerHTML={{ __html: seo.body_scripts }} />
+  )}
+  <CustomCursor />
+  <div className="grid-canvas-wrap">
+    <GridCanvas />
+  </div>
+  <div className="site-wrap">
+    {children}
+  </div>
+</body>
     </html>
   )
 }
