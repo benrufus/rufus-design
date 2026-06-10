@@ -26,10 +26,13 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   if (!path.startsWith('/760') && !path.startsWith('/api') && !path.startsWith('/_next')) {
+    const pathWithSlash = path.endsWith('/') ? path : path + '/'
+    const pathWithout = path.endsWith('/') ? path.slice(0, -1) : path
+
     const { data: redirect } = await supabase
       .from('redirects')
       .select('to, permanent')
-      .eq('from', path)
+      .in('from', [path, pathWithSlash, pathWithout])
       .maybeSingle()
 
     if (redirect) {
@@ -59,5 +62,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.png).*)'],
+  matcher: ['/:path*'],
 }
