@@ -25,13 +25,13 @@ export default function AboutEditor() {
 
   useEffect(() => {
     Promise.all([
-      supabase.from('about_page').select('*').single(),
+      supabase.from('about_page').select('*').maybeSingle(),
       supabase.from('page_sections').select('*').eq('page', 'about').order('sort_order'),
       supabase.from('stats').select('*').eq('page', 'about').order('sort_order'),
       supabase.from('values_items').select('*').order('sort_order'),
       supabase.from('team').select('*').order('sort_order'),
     ]).then(([{ data: a }, { data: s }, { data: st }, { data: v }, { data: t }]) => {
-      if (a) setAbout(a)
+      setAbout(a || { id: '', heading: 'About us', intro: '' })
       if (s) setSections(s)
       if (st) setStats(st)
       if (v) setValues(v)
@@ -44,27 +44,38 @@ export default function AboutEditor() {
     setSaving(true)
     try {
       if (tab === 'sections') {
-        await Promise.all(sections.map((s, i) =>
-          supabase.from('page_sections').update({ sort_order: i, visible: s.visible }).eq('id', s.id)
-        ))
+        for (const [i, s] of sections.entries()) {
+          await supabase.from('page_sections').update({ sort_order: i, visible: s.visible }).eq('id', s.id)
+        }
+        show('Sections saved!', 'success')
       } else if (tab === 'page' && about) {
-        await supabase.from('about_page').update({ heading: about.heading, intro: about.intro }).eq('id', about.id)
+        if (about.id) {
+          await supabase.from('about_page').update({ heading: about.heading, intro: about.intro }).eq('id', about.id)
+        } else {
+          const { data } = await supabase.from('about_page').insert({ heading: about.heading, intro: about.intro }).select().single()
+          if (data) setAbout(data)
+        }
+        show('Page copy saved!', 'success')
       } else if (tab === 'stats') {
-        await Promise.all(stats.map((s, i) =>
-          supabase.from('stats').update({ value: s.value, label: s.label, sort_order: i }).eq('id', s.id)
-        ))
+        for (const [i, s] of stats.entries()) {
+          if (s.id) {
+            await supabase.from('stats').update({ value: s.value, label: s.label, sort_order: i }).eq('id', s.id)
+          }
+        }
+        show('Stats saved!', 'success')
       } else if (tab === 'values') {
-        await Promise.all(values.map((v, i) =>
-          supabase.from('values_items').update({ number: v.number, title: v.title, description: v.description, sort_order: i }).eq('id', v.id)
-        ))
+        for (const [i, v] of values.entries()) {
+          await supabase.from('values_items').update({ number: v.number, title: v.title, description: v.description, sort_order: i }).eq('id', v.id)
+        }
+        show('Values saved!', 'success')
       } else if (tab === 'team') {
-        await Promise.all(team.map((t, i) =>
-          supabase.from('team').update({ name: t.name, role: t.role, bio: t.bio, photo: t.photo, sort_order: i, active: t.active }).eq('id', t.id)
-        ))
+        for (const [i, t] of team.entries()) {
+          await supabase.from('team').update({ name: t.name, role: t.role, bio: t.bio, photo: t.photo, sort_order: i, active: t.active }).eq('id', t.id)
+        }
+        show('Team saved!', 'success')
       }
-      show('Saved!', 'success')
-    } catch {
-      show('Error saving', 'error')
+    } catch (e: any) {
+      show('Error saving: ' + e.message, 'error')
     }
     setSaving(false)
   }
@@ -116,7 +127,7 @@ export default function AboutEditor() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em' }}>👋 About Page</h1>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Edit about page content and section visibility</p>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Edit about page content</p>
         </div>
         <button className="btn btn-orange" onClick={save} disabled={saving}>{saving ? 'Saving...' : '💾 Save'}</button>
       </div>
@@ -129,14 +140,12 @@ export default function AboutEditor() {
         <button style={TAB('team')} onClick={() => setTab('team')}>👤 Team</button>
       </div>
 
-      {/* SECTIONS TAB */}
       {tab === 'sections' && (
         <div>
           {sections.length === 0 ? (
             <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '8px' }}>
-              <p style={{ marginBottom: '1rem' }}>No sections found for the about page.</p>
-              <p style={{ fontSize: '0.8rem' }}>Run this SQL in Supabase to add them:</p>
-              <pre style={{ marginTop: '0.75rem', padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', fontSize: '0.75rem', textAlign: 'left', color: 'rgba(255,255,255,0.6)', overflowX: 'auto' }}>{`INSERT INTO page_sections (page, section_key, label, sort_order, visible) VALUES
+              <p style={{ marginBottom: '1rem' }}>No sections found. Run this SQL in Supabase:</p>
+              <pre style={{ padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', fontSize: '0.75rem', textAlign: 'left', color: 'rgba(255,255,255,0.6)', overflowX: 'auto' }}>{`INSERT INTO page_sections (page, section_key, label, sort_order, visible) VALUES
 ('about', 'stats', 'Stats', 0, true),
 ('about', 'logos', 'Client Logos', 1, true),
 ('about', 'team', 'Team', 2, true),
@@ -146,63 +155,45 @@ export default function AboutEditor() {
             </div>
           ) : (
             <>
-              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                Drag to reorder. Toggle to show/hide each section.
-              </p>
-              <SortableList
-                items={sections}
-                onChange={setSections}
-                renderItem={(section) => (
-                  <div className="card-sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                      <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{section.label}</p>
-                      <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginTop: '0.1rem' }}>{section.section_key}</p>
-                    </div>
-                    <label className="toggle">
-                      <input type="checkbox" checked={section.visible}
-                        onChange={e => setSections(ss => ss.map(s => s.id === section.id ? { ...s, visible: e.target.checked } : s))} />
-                      <span className="toggle-slider" />
-                    </label>
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Drag to reorder. Toggle to show/hide.</p>
+              <SortableList items={sections} onChange={setSections} renderItem={(section) => (
+                <div className="card-sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{section.label}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginTop: '0.1rem' }}>{section.section_key}</p>
                   </div>
-                )}
-              />
+                  <label className="toggle">
+                    <input type="checkbox" checked={section.visible}
+                      onChange={e => setSections(ss => ss.map(s => s.id === section.id ? { ...s, visible: e.target.checked } : s))} />
+                    <span className="toggle-slider" />
+                  </label>
+                </div>
+              )} />
             </>
           )}
         </div>
       )}
 
-      {/* PAGE COPY TAB */}
       {tab === 'page' && (
         <div>
-          {!about ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)' }}>
-              No about page record found. Add one in Supabase: INSERT INTO about_page (heading, intro) VALUES ('About us', 'Your intro here');
-            </div>
-          ) : (
-            <>
-              <div className="field">
-                <label>Page heading</label>
-                <input value={about.heading || ''} onChange={e => setAbout(a => a ? { ...a, heading: e.target.value } : a)} placeholder="About us" />
-              </div>
-              <div className="field">
-                <label>Intro paragraph</label>
-                <textarea value={about.intro || ''} onChange={e => setAbout(a => a ? { ...a, intro: e.target.value } : a)} rows={4} placeholder="A short intro shown in the hero..." />
-              </div>
-            </>
-          )}
+          <div className="field">
+            <label>Page heading</label>
+            <input value={about?.heading || ''} onChange={e => setAbout(a => a ? { ...a, heading: e.target.value } : a)} placeholder="About us" />
+          </div>
+          <div className="field">
+            <label>Intro paragraph</label>
+            <textarea value={about?.intro || ''} onChange={e => setAbout(a => a ? { ...a, intro: e.target.value } : a)} rows={4} placeholder="A short intro shown in the hero..." />
+          </div>
         </div>
       )}
 
-      {/* STATS TAB */}
       {tab === 'stats' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem' }}>Drag to reorder stats.</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem' }}>Shown on the about page.</p>
             <button className="btn btn-ghost btn-sm" onClick={addStat}>+ Add stat</button>
           </div>
-          {stats.length === 0 && (
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>No stats yet. Click "+ Add stat" to create one.</p>
-          )}
+          {stats.length === 0 && <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.85rem' }}>No stats yet.</p>}
           <SortableList items={stats} onChange={setStats} renderItem={(stat) => (
             <div className="card-sm">
               <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr auto', gap: '0.75rem', alignItems: 'end' }}>
@@ -221,11 +212,10 @@ export default function AboutEditor() {
         </div>
       )}
 
-      {/* VALUES TAB */}
       {tab === 'values' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem' }}>Drag to reorder values.</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.85rem' }}>Drag to reorder.</p>
             <button className="btn btn-ghost btn-sm" onClick={addValue}>+ Add value</button>
           </div>
           <SortableList items={values} onChange={setValues} renderItem={(value) => (
@@ -241,7 +231,6 @@ export default function AboutEditor() {
         </div>
       )}
 
-      {/* TEAM TAB */}
       {tab === 'team' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>

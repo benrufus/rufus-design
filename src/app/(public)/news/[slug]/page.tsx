@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getPostBySlug } from '@/lib/db'
+import Link from 'next/link'
+import { getPostBySlug, getPosts } from '@/lib/db'
 import Contact from '@/components/sections/Contact'
 
 export const revalidate = 0
@@ -15,42 +16,92 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NewsSlugPage({ params }: Props) {
   const { slug } = await params
-  const post = await getPostBySlug(slug).catch(() => null)
+  const [post, allPosts] = await Promise.allSettled([
+    getPostBySlug(slug),
+    getPosts(),
+  ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
+
   if (!post) notFound()
 
-  const date = post.published_at
-    ? new Date(post.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const date = (post as any).published_at
+    ? new Date((post as any).published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
     : null
+
+  // Related posts — exclude current, max 3
+  const related = ((allPosts as any[]) || [])
+    .filter((p: any) => p.slug !== slug)
+    .slice(0, 3)
+
+  const p = post as any
 
   return (
     <>
       <section className="cover-hero">
-        {post.cover_image ? (
+        {p.cover_image ? (
           <div className="cover-image-wrap">
-            <img src={post.cover_image} alt={post.title} className="cover-image" />
+            <img src={p.cover_image} alt={p.cover_image_alt || p.title} className="cover-image" />
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
               {date && <p className="section-eyebrow">{date}</p>}
-              {post.category && <span className="cover-tag">{post.category}</span>}
-              <h1 className="cover-title">{post.title}<span className="text-orange">.</span></h1>
-              {post.excerpt && <p className="cover-excerpt">{post.excerpt}</p>}
+              {p.category && <span className="cover-tag">{p.category}</span>}
+              <h1 className="cover-title">{p.title}<span className="text-orange">.</span></h1>
+              {p.excerpt && <p className="cover-excerpt">{p.excerpt}</p>}
             </div>
           </div>
         ) : (
           <div className="page-hero">
             {date && <p className="page-hero-label">{date}</p>}
-            <h1>{post.title}<span className="dot">.</span></h1>
-            {post.excerpt && <p className="page-hero-intro">{post.excerpt}</p>}
+            <h1>{p.title}<span className="dot">.</span></h1>
+            {p.excerpt && <p className="page-hero-intro">{p.excerpt}</p>}
           </div>
         )}
       </section>
 
-      {post.body && (
+      {p.body && (
         <section className="section article-body">
-          <div dangerouslySetInnerHTML={{ __html: post.body }} />
+          <div dangerouslySetInnerHTML={{ __html: p.body }} />
         </section>
       )}
+
+      {/* Back to news + related */}
+      <section className="section" style={{ background: 'var(--bg2)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <p className="section-label">Keep reading</p>
+            <h2 className="section-title" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', marginBottom: 0 }}>More from the blog<span className="dot">.</span></h2>
+          </div>
+          <Link href="/news" className="btn-secondary">View all news</Link>
+        </div>
+
+        {related.length > 0 ? (
+          <div className="news-grid">
+            {related.map((rel: any) => (
+              <Link key={rel.id} href={`/news/${rel.slug}`} style={{ textDecoration: 'none' }}>
+                <article className="news-card">
+                  {rel.cover_image && (
+                    <div className="news-card-img">
+                      <img src={rel.cover_image} alt={rel.cover_image_alt || rel.title} />
+                    </div>
+                  )}
+                  <div className="news-card-body">
+                    {rel.published_at && (
+                      <p className="news-card-date">
+                        {new Date(rel.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </p>
+                    )}
+                    <h3>{rel.title}</h3>
+                    {rel.excerpt && <p>{rel.excerpt.slice(0, 100)}…</p>}
+                    <span className="news-card-link">Read more →</span>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: 'var(--muted)' }}>No other posts yet.</p>
+        )}
+      </section>
 
       <Contact />
     </>
