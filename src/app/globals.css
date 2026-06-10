@@ -984,3 +984,21 @@ blockquote {
 .breadcrumb-item a:hover { color: #fff; }
 .breadcrumb-item span:last-child { color: var(--orange); }
 .breadcrumb-sep { color: rgba(255,255,255,0.2); }
+
+/* ─── Mobile fixes ───────────────────────────────────── */
+
+/* About story section - single column on mobile */
+.about-story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: start;
+  max-width: 1100px;
+}
+@media (max-width: 768px) {
+  .about-story-grid { grid-template-columns: 1fr; }
+}
+
+/* Work cover hero - fix squashed mobile */
+.cover-image-wrap { max-height: 60vw; min-height: 280px; }
+.cover-image { max-height: 60vw; min-height: 280px; }
