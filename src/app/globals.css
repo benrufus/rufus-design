@@ -1014,3 +1014,7 @@ blockquote {
   .cover-image-wrap { max-height: none; min-height: 420px; }
   .cover-image { max-height: none; min-height: 420px; }
 }
+
+.grecaptcha-badge { 
+    visibility: hidden !important; 
+}
