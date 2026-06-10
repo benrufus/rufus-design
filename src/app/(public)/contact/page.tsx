@@ -18,11 +18,7 @@ export default async function ContactPage() {
   return (
     <>
       <PageHero label="Say hello" title="Contact us" intro="Ready to start your project? Get in touch and we'll get back to you within one working day." />
-      <Contact
-        fields={(contactForm as any)?.fields || undefined}
-        phone={(siteSettings as any)?.phone || undefined}
-        email={(siteSettings as any)?.email || undefined}
-      />
+      <Contact />
     </>
   )
 }
