@@ -10,59 +10,207 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <>
-      <PageHero label="Legal" title="Privacy Policy" intro="Last updated: June 2026" />
-      <section className="section" style={{ background: 'var(--bg)' }}>
-        <div style={{ maxWidth: '720px', lineHeight: 1.9, color: 'rgba(255,255,255,0.75)', fontSize: '1rem' }}>
+      <PageHero
+  label="Legal"
+  title="Privacy Policy"
+  intro="Last updated: June 2026"
+/>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>Who we are</h2>
-          <p>Rufus Design Limited ("we", "us", "our") is a web design and digital marketing agency registered in England and Wales. Our registered office is 4 Friars Field, Berkhamsted, Hertfordshire.</p>
-          <p style={{ marginTop: '0.75rem' }}>This privacy policy explains how we collect, use and protect your personal data when you use our website or contact us.</p>
+<section className="section">
+  <div className="container">
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>What data we collect</h2>
-          <p>We may collect the following information:</p>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <li>Name and contact information (email, phone number)</li>
-            <li>Information you provide via our contact form</li>
-            <li>Technical data such as IP address, browser type and operating system (via analytics)</li>
-            <li>Usage data about how you interact with our website</li>
-          </ul>
+    <p>
+      This privacy policy applies between you, the User of this Website and
+      Rufus Design Limited, the owner and provider of this Website...
+    </p>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>How we use your data</h2>
-          <p>We use the information we collect to:</p>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <li>Respond to enquiries submitted through our contact form</li>
-            <li>Improve our website and services</li>
-            <li>Send occasional marketing communications (only with your consent)</li>
-            <li>Comply with legal obligations</li>
-          </ul>
+    <h2>Definitions and Interpretation</h2>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>Cookies</h2>
-          <p>Our website uses cookies and similar tracking technologies to improve your browsing experience and to analyse site traffic. You can control cookie settings through your browser preferences. We use Google Analytics to understand how visitors use our site — this data is anonymised and aggregated.</p>
+    <h3>Data</h3>
+    <p>
+      Collectively all information that you submit to Rufus Design Limited via
+      the Website...
+    </p>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>Data storage and security</h2>
-          <p>Your data is stored securely using Supabase (hosted on AWS EU infrastructure). We do not sell, trade or transfer your personal information to third parties without your consent, except where required by law.</p>
-          <p style={{ marginTop: '0.75rem' }}>Contact form submissions are stored in our secure database and may also be forwarded to our email via Brevo.</p>
+    <h3>Cookies</h3>
+    <p>
+      A small text file placed on your computer by this Website...
+    </p>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>Your rights</h2>
-          <p>Under UK GDPR, you have the right to:</p>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <li>Access the personal data we hold about you</li>
-            <li>Request correction of inaccurate data</li>
-            <li>Request deletion of your data</li>
-            <li>Object to or restrict processing of your data</li>
-            <li>Data portability</li>
-          </ul>
-          <p style={{ marginTop: '0.75rem' }}>To exercise any of these rights, contact us at <a href="mailto:hello@rufusdesign.co.uk" style={{ color: 'var(--orange)' }}>hello@rufusdesign.co.uk</a>.</p>
+    <h3>Data Protection Laws</h3>
+    <p>
+      Any applicable law relating to the processing of personal Data...
+    </p>
 
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', color: '#fff', marginBottom: '1rem', marginTop: '2.5rem' }}>Contact us</h2>
-          <p>If you have any questions about this privacy policy or your personal data, please contact:</p>
-          <p style={{ marginTop: '0.75rem' }}>
-            Rufus Design Limited<br />
-            4 Friars Field, Berkhamsted, Hertfordshire<br />
-            <a href="mailto:hello@rufusdesign.co.uk" style={{ color: 'var(--orange)' }}>hello@rufusdesign.co.uk</a>
-          </p>
-        </div>
-      </section>
+    <h2>Scope of this Privacy Policy</h2>
+
+    <p>
+      This privacy policy applies only to the actions of Rufus Design Limited
+      and Users with respect to this Website...
+    </p>
+
+    <h2>Data Collected</h2>
+
+    <p>
+      We may collect the following Data, which includes personal Data, from
+      you:
+    </p>
+
+    <ul>
+      <li>Name</li>
+      <li>Job title</li>
+      <li>Profession</li>
+      <li>Contact information such as email addresses and telephone numbers</li>
+      <li>IP address</li>
+      <li>Web browser type and version</li>
+      <li>Operating system</li>
+      <li>
+        A list of URLs starting with a referring site, your activity on this
+        Website and the site you exit to
+      </li>
+    </ul>
+
+    <h2>How We Collect Data</h2>
+
+    <h3>Data Given To Us By You</h3>
+
+    <ul>
+      <li>When you contact us through the Website</li>
+      <li>By telephone</li>
+      <li>By post</li>
+      <li>By email</li>
+      <li>When you use our services</li>
+    </ul>
+
+    <h3>Data Received From Third Parties</h3>
+
+    <ul>
+      <li>Google</li>
+      <li>Google Analytics</li>
+      <li>Facebook</li>
+      <li>Instagram</li>
+      <li>LinkedIn</li>
+    </ul>
+
+    <h2>Our Use of Data</h2>
+
+    <p>
+      Any or all of the above Data may be required by us from time to time in
+      order to provide you with the best possible service and experience when
+      using our Website.
+    </p>
+
+    <ul>
+      <li>Improvement of our products and services</li>
+      <li>Email marketing communications</li>
+      <li>Market research</li>
+      <li>Website customisation and improvement</li>
+    </ul>
+
+    <h2>Who We Share Data With</h2>
+
+    <ul>
+      <li>Group companies and affiliates</li>
+      <li>Employees, agents and professional advisers</li>
+    </ul>
+
+    <h2>Keeping Data Secure</h2>
+
+    <p>
+      We will use technical and organisational measures to safeguard your Data.
+    </p>
+
+    <ul>
+      <li>Secure servers</li>
+      <li>Password protected systems</li>
+      <li>Controlled access to data</li>
+    </ul>
+
+    <h2>Data Retention</h2>
+
+    <p>
+      Unless a longer retention period is required or permitted by law, we will
+      only hold your Data for as long as necessary.
+    </p>
+
+    <h2>Your Rights</h2>
+
+    <ul>
+      <li>Right to access</li>
+      <li>Right to correct</li>
+      <li>Right to erase</li>
+      <li>Right to restrict processing</li>
+      <li>Right to data portability</li>
+      <li>Right to object</li>
+    </ul>
+
+    <p>
+      To exercise your rights, please contact:
+      <br />
+      <a href="mailto:hello@rufusdesign.co.uk">
+        hello@rufusdesign.co.uk
+      </a>
+    </p>
+
+    <h2>Links To Other Websites</h2>
+
+    <p>
+      This Website may, from time to time, provide links to other websites...
+    </p>
+
+    <h2>Changes Of Business Ownership And Control</h2>
+
+    <p>
+      Rufus Design Limited may, from time to time, expand or reduce our
+      business...
+    </p>
+
+    <h2>Cookies</h2>
+
+    <p>
+      This Website may place and access certain Cookies on your computer...
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Type of Cookie</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Strictly Necessary Cookies</td>
+          <td>
+            Required for the operation of the Website and essential services.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>General</h2>
+
+    <p>
+      This Agreement will be governed by and interpreted according to the law
+      of England and Wales.
+    </p>
+
+    <h2>Changes To This Privacy Policy</h2>
+
+    <p>
+      Rufus Design Limited reserves the right to change this privacy policy as
+      we may deem necessary from time to time or as may be required by law.
+    </p>
+
+    <p>
+      You may contact us by email at{' '}
+      <a href="mailto:hello@rufusdesign.co.uk">
+        hello@rufusdesign.co.uk
+      </a>.
+    </p>
+
+  </div>
+</section>
     </>
   )
 }
