@@ -1,9 +1,33 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+let ratelimit: Ratelimit | null = null
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(5, '1h'),
+  })
+}
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting
+    if (ratelimit) {
+      const ip = req.headers.get('x-forwarded-for') ?? 'unknown'
+      const { success } = await ratelimit.limit(ip)
+      if (!success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+      }
+    }
+
     const body = await req.json()
+
+    // Honeypot
+    if (body._honey) {
+      return NextResponse.json({ ok: true })
+    }
 
     // Verify reCAPTCHA v3
     const { recaptchaToken, ...formData } = body
