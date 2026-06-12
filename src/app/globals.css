@@ -1081,3 +1081,11 @@ blockquote {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ─── Footer status ──────────────────────────────────── */
+.footer-status { border-top: 1px solid var(--border); padding-top: 2rem; margin-bottom: 2rem; }
+.footer-status-grid { display: flex; gap: 2rem; flex-wrap: wrap; }
+.footer-status-item { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.footer-status-name { font-family: var(--font-heading); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; }
+.footer-status-badge { height: 20px; width: auto; }
+.footer-status-location { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.05em; }
