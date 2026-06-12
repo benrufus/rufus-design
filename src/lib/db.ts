@@ -152,12 +152,25 @@ export async function getLocationBySlug(slug: string) {
   return data
 }
 
-export async function getServicesPages(publishedOnly = true) {
+export async function getServices() {
   const sb = await createClient()
-  let q = sb.from('services_pages').select('*').order('sort_order')
-  if (publishedOnly) q = q.eq('published', true)
-  const { data } = await q
-  return data || []
+  const { data } = await sb
+    .from('services_pages')
+    .select('id, title, slug, excerpt, hero_image, sort_order')
+    .eq('published', true)
+    .order('sort_order')
+  if (!data) return []
+  // Map services_pages fields to match Services component interface
+  return data.map((s: any, i: number) => ({
+    id: s.id,
+    number: String(i + 1).padStart(2, '0'),
+    title: s.title,
+    description: s.excerpt || '',
+    slug: s.slug,
+    image: s.hero_image,
+    sort_order: s.sort_order,
+    active: true,
+  }))
 }
 
 export async function getServicesPageBySlug(slug: string) {
