@@ -115,7 +115,7 @@ export default function Footer() {
             )}
           </ul>
         </div>
-        <div class="menu-dog"><img src="/RufusDoggo.png" alt="Rufus" style="width:220px;height:220px;object-fit:cover"></div>
+        <div className="menu-dog"><img src="/RufusDoggo.png" alt="Rufus" style="width:220px;height:220px;object-fit:cover"></div>
       </div>
 
       <div className="footer-bottom">
