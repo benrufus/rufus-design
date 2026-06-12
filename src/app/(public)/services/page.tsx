@@ -73,3 +73,4 @@ export default async function ServicesPage() {
     </>
   )
 }
+console.log('services data:', JSON.stringify(services.slice(0, 1)))
