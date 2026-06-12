@@ -30,6 +30,14 @@ export async function getSeoSettings() {
   return data
 }
 
+export async function getServicesPages(publishedOnly = true) {
+  const sb = await createClient()
+  let q = sb.from('services_pages').select('*').order('sort_order')
+  if (publishedOnly) q = q.eq('published', true)
+  const { data } = await q
+  return data || []
+}
+
 export async function getPageSeo(pageKey: string) {
   const sb = await createClient()
   const { data } = await sb.from('page_seo').select('*').eq('page_key', pageKey).maybeSingle()
