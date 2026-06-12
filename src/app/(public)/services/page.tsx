@@ -45,7 +45,8 @@ export default async function ServicesPage() {
       <PageHero
         label="What we do"
         title="Our services"
-        intro="From web design and development to SEO, PPC and managed hosting — everything your business needs to grow online."
+        intro="Websites, digital marketing, IT support, payment services and managed hosting. Everything your business needs under one roof, backed by expert advice and reliable support.
+"
       />
 
       {services.length > 0 ? (
