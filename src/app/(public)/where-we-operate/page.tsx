@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
 import { getLocations, getSiteSettings, getPageSeo } from '@/lib/db'
+import GridCanvas from '@/components/ui/GridCanvas'
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeo('where-we-operate').catch(() => null)
