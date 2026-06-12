@@ -112,10 +112,11 @@ export default async function AboutPage() {
               {servicesList.map((s: any) => (
                 <Link key={s.id} href={s.slug ? `/services/${s.slug}` : '/services'} style={{ textDecoration: 'none' }}>
                   <div className="service-card">
-                    <p className="service-num">{s.number}</p>
-                    <h3 className="service-name">{s.title}</h3>
-                    {s.description && <p className="service-desc">{s.description}</p>}
-                  </div>
+  {s.image && <div className="service-card-bg" style={{ backgroundImage: `url(${s.image})` }} />}
+  <p className="service-num">{s.number}</p>
+  <h3 className="service-name">{s.title}</h3>
+  {s.description && <p className="service-desc">{s.description}</p>}
+</div>
                 </Link>
               ))}
             </div>
