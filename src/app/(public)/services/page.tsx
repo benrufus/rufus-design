@@ -54,7 +54,7 @@ export default async function ServicesPage() {
             {services.map((s: any, i: number) => (
               <Link key={s.id} href={`/services/${s.slug}`} style={{ textDecoration: 'none' }}>
                 <div className="service-card">
-                  {s.image && <div className="service-card-bg" style={{ backgroundImage: `url(${s.image})` }} />}
+                  {s.hero_image && <div className="service-card-bg" style={{ backgroundImage: `url(${s.hero_image})` }} />}
                   <p className="service-num">0{i + 1}</p>
                   <h2 className="service-name">{s.title}</h2>
                   {s.excerpt && <p className="service-desc">{s.excerpt}</p>}
