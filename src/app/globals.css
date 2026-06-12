@@ -449,7 +449,7 @@ blockquote {
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.08;
+  opacity: 0.15;
   transition: opacity 0.4s;
   z-index: 0;
 }
