@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 const MENU_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
   { href: '/work', label: 'Work' },
   { href: '/news', label: 'News' },
   { href: '/contact', label: 'Contact' },
