@@ -99,7 +99,16 @@ export default function LocationsPage() {
             </div>
           </div>
           <ImageUpload value={editing.hero_image || ''} onChange={url => set('hero_image', url)} folder="locations" label="Hero image" />
-          <div className="field"><label>Page body (use H2 headings for table of contents)</label><RichTextEditor value={editing.body || ''} onChange={html => set('body', html)} placeholder="Write about web design services in this area..." /></div>
+          <div className="field">
+  <label>Page body (HTML)</label>
+  <textarea
+    value={editing.body || ''}
+    onChange={e => set('body', e.target.value)}
+    rows={15}
+    style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
+    placeholder="<h2>Section heading</h2>&#10;<p>Your paragraph text here...</p>"
+  />
+</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
             <div className="field"><label>SEO title</label><input value={editing.meta_title || ''} onChange={e => set('meta_title', e.target.value)} /></div>
             <div className="field"><label>SEO description</label><input value={editing.meta_description || ''} onChange={e => set('meta_description', e.target.value)} /></div>
