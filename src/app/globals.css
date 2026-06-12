@@ -502,8 +502,8 @@ blockquote {
 .news-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
 .news-card-link { display: inline-block; margin-top: 1rem; font-family: var(--font-heading); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); }
 @media (min-width: 769px) {
-  .cover-image-wrap { max-height: 600px; }
-  .cover-image { max-height: 600px; }
+  .cover-image-wrap--news { max-height: 500px; }
+  .cover-image--news { max-height: 500px; }
 }
 
 
