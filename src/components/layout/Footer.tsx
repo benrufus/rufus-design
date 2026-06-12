@@ -42,11 +42,11 @@ const WhatsAppIcon = () => (
 )
 
 const MONITORS = [
-  { id: 41, name: 'THOR', location: 'Berkhamsted' },
-  { id: 41, name: 'THOR', location: 'Berkhamsted' },
-  { id: 41, name: 'THOR', location: 'Berkhamsted' },
-  { id: 41, name: 'THOR', location: 'Berkhamsted' },
-  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+  { id: 41, name: 'Rufus THOR', location: 'Berkhamsted' },
+  { id: 42, name: 'Rufus IRONMAN', location: 'Worcester' },
+  { id: 43, name: 'Rufus HAWKEYE', location: 'Amsterdam' },
+  { id: 44, name: 'Rufus BLACKWIDOW', location: 'Heathrow' },
+  { id: 45, name: 'Rufus HULK', location: 'Heathrow' },
 ]
 
 export default function Footer() {
