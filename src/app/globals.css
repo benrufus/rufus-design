@@ -1090,4 +1090,29 @@ blockquote {
 .footer-status-badge { height: 20px; width: auto; }
 .footer-status-location { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.05em; }
 
-
+/* ─── Work results ───────────────────────────────────── */
+.work-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.work-result {
+  border-left: 3px solid var(--orange);
+  padding-left: 1.5rem;
+}
+.work-result-value {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 0;
+}
+.work-result-metric {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+  line-height: 1.4;
+}
