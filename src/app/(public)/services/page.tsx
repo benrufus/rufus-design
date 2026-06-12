@@ -45,8 +45,7 @@ export default async function ServicesPage() {
       <PageHero
         label="What we do"
         title="Our services"
-        intro="Websites, digital marketing, IT support, payment services and managed hosting. Everything your business needs under one roof, backed by expert advice and reliable support.
-"
+        intro="Websites, digital marketing, IT support, payment services and managed hosting. Everything your business needs under one roof, backed by expert advice and reliable support."
       />
 
       {services.length > 0 ? (
@@ -54,14 +53,12 @@ export default async function ServicesPage() {
           <div className="services-grid">
             {services.map((s: any, i: number) => (
               <Link key={s.id} href={`/services/${s.slug}`} style={{ textDecoration: 'none' }}>
-                <div className="service-card ...">
-  {s.image && (
-    <div className="service-card-bg" style={{ backgroundImage: `url(${s.image})` }} />
-  )}
-  <p className="service-num">{s.number}</p>
-  <h3 className="service-name">{s.title}</h3>
-  {s.description && <p className="service-desc">{s.description}</p>}
-</div>
+                <div className="service-card">
+                  {s.image && <div className="service-card-bg" style={{ backgroundImage: `url(${s.image})` }} />}
+                  <p className="service-num">0{i + 1}</p>
+                  <h2 className="service-name">{s.title}</h2>
+                  {s.excerpt && <p className="service-desc">{s.excerpt}</p>}
+                </div>
               </Link>
             ))}
           </div>
