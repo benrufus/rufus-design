@@ -60,8 +60,8 @@ export default async function NewsSlugPage({ params }: Props) {
 
       <section className="cover-hero">
         {p.cover_image ? (
-          <div className="cover-image-wrap">
-            <img src={p.cover_image} alt={p.cover_image_alt || p.title} className="cover-image" />
+          <div className="cover-image-wrap cover-image-wrap--news">
+  <img src={p.cover_image} alt={p.cover_image_alt || p.title} className="cover-image cover-image--news" />
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
