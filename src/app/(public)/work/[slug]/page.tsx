@@ -90,18 +90,18 @@ export default async function WorkSlugPage({ params }: Props) {
       )}
 
       {results.length > 0 && (
-        <section className="section" style={{ background: 'var(--bg2)' }}>
-          <p className="section-label">The results</p>
-          <div className="work-results">
-            {results.map((r, i) => (
-              <div key={i} className="work-result">
-                <p className="work-result-value">{r.value}</p>
-                <p className="work-result-metric">{r.metric}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+  <section className="section" style={{ background: 'var(--bg2)' }}>
+    <p className="section-label">The results</p>
+    <div className="work-results">
+      {results.map((r, i) => (
+        <div key={i} className="work-result">
+          <p className="work-result-value">{r.value}</p>
+          <p className="work-result-metric">{r.metric}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
 
       {gallery.length > 0 && (
         <section className="section">
