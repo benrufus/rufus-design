@@ -27,7 +27,6 @@ export default async function WhereWeOperatePage() {
   } catch { /* fallback */ }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
-
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -45,23 +44,25 @@ export default async function WhereWeOperatePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Where We Operate' }]} />
-
       <section className="page-hero" style={{ background: 'var(--bg)', position: 'relative' }}>
-  <GridCanvas />
-  <p className="page-hero-label">Where we work</p>
-  <h1>Where we operate<span className="dot">.</span></h1>
-  <p className="page-hero-intro">Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK.</p>
-</section>
+        <GridCanvas />
+        <p className="page-hero-label">Where we work</p>
+        <h1>Where we operate<span className="dot">.</span></h1>
+        <p className="page-hero-intro">Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK.</p>
+      </section>
 
       <section className="section" style={{ background: 'var(--bg2)' }}>
         {locationList.length > 0 ? (
-          <div className="services-grid">
+          <div className="location-grid">
             {locationList.map((loc: any) => (
-              <Link key={loc.id} href={`/where-we-operate/${loc.slug}`} style={{ textDecoration: 'none' }}>
-                <div className="service-card">
-                  <p className="service-num">{loc.county}</p>
-                  <h2 className="service-name">{loc.town}</h2>
-                  {loc.intro && <p className="service-desc">{loc.intro.slice(0, 100)}…</p>}
+              <Link key={loc.id} href={`/where-we-operate/${loc.slug}`} className="location-card">
+                {loc.hero_image && (
+                  <div className="location-card-bg" style={{ backgroundImage: `url(${loc.hero_image})` }} />
+                )}
+                <div className="location-card-content">
+                  <p className="location-card-county">{loc.county}</p>
+                  <h2 className="location-card-town">{loc.town}</h2>
+                  {loc.intro && <p className="location-card-intro">{loc.intro}</p>}
                 </div>
               </Link>
             ))}
