@@ -468,7 +468,7 @@ blockquote {
 .service-num { font-family: var(--font-heading); font-weight: 800; font-size: 2rem; color: var(--orange); margin-bottom: 1rem; line-height: 1; }
 .service-card:hover .service-num { color: rgba(255,255,255,0.6); }
 .service-name { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
-.service-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.7; transition: color 0.3s; }
+.service-desc { font-size: 0.875rem; color: #fff; line-height: 1.7; transition: color 0.3s; }
 .service-card:hover .service-desc { color: rgba(255,255,255,0.7); }
 .services-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
