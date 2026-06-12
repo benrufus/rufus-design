@@ -10,6 +10,7 @@ interface Service {
   sort_order: number
   active: boolean
   slug?: string
+  image?: string
 }
 
 interface ServicesProps { services?: Service[] }
@@ -33,12 +34,9 @@ export default function Services({ services }: ServicesProps) {
       </div>
       <div className="services-grid">
         {items.map((s, i) => (
-          <Link
-            key={s.id}
-            href={s.slug ? `/services/${s.slug}` : '/services'}
-            style={{ textDecoration: 'none' }}
-          >
+          <Link key={s.id} href={s.slug ? `/services/${s.slug}` : '/services'} style={{ textDecoration: 'none' }}>
             <div className={`service-card reveal reveal-delay-${Math.min(i + 1, 5)}${visible ? ' visible' : ''}`}>
+              {s.image && <div className="service-card-bg" style={{ backgroundImage: `url(${s.image})` }} />}
               <p className="service-num">{s.number}</p>
               <h3 className="service-name">{s.title}</h3>
               {s.description && <p className="service-desc">{s.description}</p>}
