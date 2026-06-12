@@ -161,12 +161,12 @@ export default async function AboutPage() {
               The company was named after Rufus, the owner's first dog, a Giant Schnauzer with a larger-than-life personality. What started as a freelance web design business has grown into a trusted digital partner for businesses across Hertfordshire, Buckinghamshire, London and the wider UK.
               </p>
               <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
-              Over the years, we've worked with organisations of all sizes, from global brands including Sony, Butlin's and Duarte, through to SMEs such as Simon Taylor Furniture, KDA Accountants and Reborne Longevity. We believe every client deserves the same level of care and attention, regardless of their size.
+              Over the years, we've worked with organisations of all sizes, from global brands including Sony, Butlin's and Duarte, through to SMEs such as Simon Taylor Furniture, KDA Accountants and Hi-Pro. We believe every client deserves the same level of care and attention, regardless of their size.
               </p>
           </div>
           <div>
             <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
-              Many of our clients have been with us for years. Simon Taylor Furniture, for example, has trusted us since 2010. We see this as one of our biggest achievements and a reflection of the relationships we build with our clients.
+              Many of our clients have been with us for years. Simon Taylor Furniture, for example, has trusted us for 10 years. We see this as one of our biggest achievements and a reflection of the relationships we build with our clients.
               </p>
             <p style={{ color: 'var(--muted)', lineHeight: 1.9 }}>
               We're also passionate about supporting our local community and regularly work with charities and not-for-profit organisations. Current projects include supporting Castle Fields and other organisations looking to make a bigger impact online.
