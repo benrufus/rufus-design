@@ -739,7 +739,6 @@ blockquote {
   .about-section { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-story-grid { grid-template-columns: 1fr; }
   .contact-grid, .contact-section { grid-template-columns: 1fr; gap: 3rem; }
-  .breadcrumb { display: none; }
   .cover-image-wrap { max-height: none; min-height: 420px; }
   .cover-image { max-height: none; min-height: 420px; }
   .cover-content { padding-bottom: 2rem; }
