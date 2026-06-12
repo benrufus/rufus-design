@@ -20,8 +20,8 @@ export default function About({ heading, body, stats, quote }: AboutProps) {
       <div className="about-left">
         <p className="section-eyebrow">About Rufus</p>
         <h2 className="about-heading">
-          {heading || <>Helping businesses grow <span className="text-orange">since 2007.</span></>}<span className="dot"></span>
-        </h2>
+  {heading ? <>{heading}<span className="text-orange">.</span></> : <>Helping businesses grow <span className="text-orange">since 2007.</span></>}
+</h2>
         <p className="about-body">
           {body || "We're a small, expert team based in Berkhamsted. No account managers, no middlemen — just direct access to experienced designers and developers who care about results."}
         </p>
