@@ -4,6 +4,7 @@ import Link from 'next/link'
 import WorkGrid from '@/components/sections/WorkGrid'
 import Contact from '@/components/sections/Contact'
 import Breadcrumb from '@/components/ui/Breadcrumb'
+import PageHero from '@/components/ui/PageHero'
 import { getServicesPageBySlug, getWork, getSiteSettings } from '@/lib/db'
 
 export const revalidate = 0
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = await getServicesPageBySlug(slug).catch(() => null)
   if (!service) return {}
   return {
-    title: service.meta_title || `${service.title} | Rufus Design`,
+    title: service.meta_title || `${service.title}`,
     description: service.meta_description || service.excerpt,
     alternates: { canonical: `/services/${slug}` },
   }
@@ -27,7 +28,6 @@ export default async function ServicePage({ params }: Props) {
   ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
 
   if (!service) notFound()
-
   const s = service as any
   const workItems = (work as any[]) || []
   const settings = siteSettings as any
@@ -48,10 +48,10 @@ export default async function ServicePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Services', href: '/services' }, { label: s.title }]} />
 
-      <section className="cover-hero">
-        {s.hero_image ? (
-          <div className="cover-image-wrap">
-            <img src={s.hero_image} alt={s.title} className="cover-image" />
+      {s.hero_image ? (
+        <section className="cover-hero">
+          <div className="cover-image-wrap cover-image-wrap--news">
+            <img src={s.hero_image} alt={s.title} className="cover-image cover-image--news" />
             <div className="cover-overlay" />
             <div className="cover-gradient" />
             <div className="cover-content">
@@ -60,14 +60,10 @@ export default async function ServicePage({ params }: Props) {
               {s.intro && <p className="cover-excerpt">{s.intro}</p>}
             </div>
           </div>
-        ) : (
-          <div className="page-hero">
-            <p className="page-hero-label">Our services</p>
-            <h1>{s.title}<span className="dot">.</span></h1>
-            {s.intro && <p className="page-hero-intro">{s.intro}</p>}
-          </div>
-        )}
-      </section>
+        </section>
+      ) : (
+        <PageHero label="Our services" title={s.title} intro={s.intro} />
+      )}
 
       {s.body && (
         <section className="section article-body">
@@ -85,7 +81,6 @@ export default async function ServicePage({ params }: Props) {
       </section>
 
       {workItems.length > 0 && <WorkGrid items={workItems} showTitle />}
-
       <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
