@@ -444,6 +444,16 @@ blockquote {
   overflow: hidden;
   height: 100%;
 }
+.service-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  transition: opacity 0.4s;
+  z-index: 0;
+}
+.service-card:hover .service-card-bg { opacity: 0; }
 .service-card::before {
   content: '';
   position: absolute;
@@ -451,9 +461,10 @@ blockquote {
   background: var(--orange);
   transform: translateX(-101%);
   transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 1;
 }
 .service-card:hover::before { transform: translateX(0); }
-.service-card > * { position: relative; z-index: 1; }
+.service-card > * { position: relative; z-index: 2; }
 .service-num { font-family: var(--font-heading); font-weight: 800; font-size: 2rem; color: var(--orange); margin-bottom: 1rem; line-height: 1; }
 .service-card:hover .service-num { color: rgba(255,255,255,0.6); }
 .service-name { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
