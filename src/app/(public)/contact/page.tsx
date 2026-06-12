@@ -43,7 +43,7 @@ export default async function ContactPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
-      <PageHero label="Say hello" title="Contact us" intro="Ready to start your project? Get in touch and we'll get back to you within one working day." />
+      <PageHero label="Say hello" title="Got a project, problem or half-finished idea? Let's talk." intro="We've been helping businesses grow online since 2007, and we still prefer conversations over sales pitches." />
       <Contact phone={settings?.phone} email={settings?.email} />
     </>
   )
