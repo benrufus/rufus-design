@@ -131,7 +131,7 @@ export default function Footer() {
 
       {/* Status section */}
       <div className="footer-status">
-        <p className="footer-col-title" style={{ marginBottom: '1.25rem' }}>Current operational status</p>
+        <p className="footer-col-title" style={{ marginBottom: '1.25rem' }}>Current super-hero operational status</p>
         <div className="footer-status-grid">
           {MONITORS.map((monitor, i) => (
             <div key={i} className="footer-status-item">
