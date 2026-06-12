@@ -35,7 +35,17 @@ export default async function LocationPage({ params }: Props) {
   return (
     <>
       <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Where We Operate', href: '/where-we-operate' }, { label: location.town }]} />
-      <LocationHero town={location.town} intro={location.intro} />
+      <LocationHero
+        town={location.town}
+        intro={location.intro}
+        coverImage={location.hero_image}
+      />
+
+      {location.body && (
+        <section className="section article-body">
+          <div dangerouslySetInnerHTML={{ __html: location.body }} />
+        </section>
+      )}
 
       {location.services?.length > 0 && (
         <section className="section" style={{ background: 'var(--bg2)', paddingTop: '2rem', paddingBottom: '2rem' }}>
