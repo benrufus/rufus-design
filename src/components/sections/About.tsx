@@ -6,7 +6,7 @@ interface AboutProps { heading?: string; body?: string; stats?: Stat[]; quote?: 
 
 const DEFAULT_STATS: Stat[] = [
   { value: '18+', label: 'Years in business' },
-  { value: '40+', label: 'Client websites managed' },
+  { value: '50+', label: 'Client websites managed' },
   { value: '4.9★', label: 'Google rating' },
   { value: '<20ms', label: 'Hosting response times' },
 ]
