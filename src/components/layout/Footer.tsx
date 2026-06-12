@@ -41,6 +41,14 @@ const WhatsAppIcon = () => (
   </svg>
 )
 
+const MONITORS = [
+  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+  { id: 41, name: 'THOR', location: 'Berkhamsted' },
+]
+
 export default function Footer() {
   const [settings, setSettings] = useState<Settings>({})
 
@@ -54,11 +62,11 @@ export default function Footer() {
   const address = settings.address || ''
 
   const socials = [
-  settings.facebook_url && { label: 'Facebook', href: settings.facebook_url, Icon: FacebookIcon },
-  settings.instagram_url && { label: 'Instagram', href: settings.instagram_url, Icon: InstagramIcon },
-  settings.linkedin_url && { label: 'LinkedIn', href: settings.linkedin_url, Icon: LinkedInIcon },
-  { label: 'WhatsApp', href: 'https://api.whatsapp.com/send?phone=441442967775&text=Help%20Please', Icon: WhatsAppIcon },
-].filter(Boolean) as { label: string; href: string; Icon: () => React.ReactElement }[]
+    settings.facebook_url && { label: 'Facebook', href: settings.facebook_url, Icon: FacebookIcon },
+    settings.instagram_url && { label: 'Instagram', href: settings.instagram_url, Icon: InstagramIcon },
+    settings.linkedin_url && { label: 'LinkedIn', href: settings.linkedin_url, Icon: LinkedInIcon },
+    { label: 'WhatsApp', href: 'https://api.whatsapp.com/send?phone=441442967775&text=Help%20Please', Icon: WhatsAppIcon },
+  ].filter(Boolean) as { label: string; href: string; Icon: () => React.ReactElement }[]
 
   return (
     <footer className="footer">
@@ -79,16 +87,16 @@ export default function Footer() {
         </div>
 
         <div>
-  <p className="footer-col-title">Services</p>
-  <ul className="footer-links">
-    <li><Link href="/services/web-design">Web Design</Link></li>
-    <li><Link href="/services/web-development">Web Development</Link></li>
-    <li><Link href="/services/seo-and-ppc">SEO & PPC</Link></li>
-    <li><Link href="/services/managed-hosting">Managed Hosting</Link></li>
-    <li><Link href="/services/graphic-design">Graphic Design</Link></li>
-    <li><Link href="/services">All Services</Link></li>
-  </ul>
-</div>
+          <p className="footer-col-title">Services</p>
+          <ul className="footer-links">
+            <li><Link href="/services/web-design">Web Design</Link></li>
+            <li><Link href="/services/web-development">Web Development</Link></li>
+            <li><Link href="/services/seo-and-ppc">SEO & PPC</Link></li>
+            <li><Link href="/services/managed-hosting">Managed Hosting</Link></li>
+            <li><Link href="/services/graphic-design">Graphic Design</Link></li>
+            <li><Link href="/services">All Services</Link></li>
+          </ul>
+        </div>
 
         <div>
           <p className="footer-col-title">Company</p>
@@ -115,17 +123,28 @@ export default function Footer() {
             )}
           </ul>
         </div>
+
         <div className="menu-dog">
-  <img
-    src="/RufusDoggo.png"
-    alt="Rufus"
-    style={{
-      width: '220px',
-      height: '220px',
-      objectFit: 'contain',
-    }}
-  />
-</div>
+          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '220px', height: '220px', objectFit: 'contain' }} />
+        </div>
+      </div>
+
+      {/* Status section */}
+      <div className="footer-status">
+        <p className="footer-col-title" style={{ marginBottom: '1.25rem' }}>Current operational status</p>
+        <div className="footer-status-grid">
+          {MONITORS.map((monitor, i) => (
+            <div key={i} className="footer-status-item">
+              <p className="footer-status-name">{monitor.name}</p>
+              <img
+                src={`https://monitor.rufusdesign.co.uk/api/badge/${monitor.id}/uptime`}
+                alt={`${monitor.name} uptime`}
+                className="footer-status-badge"
+              />
+              <p className="footer-status-location">{monitor.location}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="footer-bottom">
