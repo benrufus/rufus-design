@@ -42,11 +42,11 @@ const WhatsAppIcon = () => (
 )
 
 const MONITORS = [
-  { id: 41, name: 'Rufus THOR', location: 'Berkhamsted' },
-  { id: 42, name: 'Rufus IRONMAN', location: 'Worcester' },
-  { id: 43, name: 'Rufus HAWKEYE', location: 'Amsterdam' },
-  { id: 44, name: 'Rufus BLACKWIDOW', location: 'Heathrow' },
-  { id: 45, name: 'Rufus HULK', location: 'Heathrow' },
+  { id: 41, name: 'Rufus THOR', location: 'Berkhamsted / AI' },
+  { id: 42, name: 'Rufus IRONMAN', location: 'Worcester / Legacy' },
+  { id: 43, name: 'Rufus HAWKEYE', location: 'Amsterdam / Analytics' },
+  { id: 44, name: 'Rufus BLACKWIDOW', location: 'Heathrow / Hosting' },
+  { id: 45, name: 'Rufus HULK', location: 'Heathrow / Hosting' },
 ]
 
 export default function Footer() {
@@ -125,7 +125,7 @@ export default function Footer() {
         </div>
 
         <div className="menu-dog">
-          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '220px', height: '220px', objectFit: 'contain' }} />
+          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '200px', height: '200px', objectFit: 'contain' }} />
         </div>
       </div>
 
