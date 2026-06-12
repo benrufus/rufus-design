@@ -19,7 +19,7 @@ export default async function ServicesPage() {
   const [servicesList, siteSettings] = await Promise.allSettled([
     getServicesPages(), getSiteSettings(),
   ]).then(r => r.map(x => x.status === 'fulfilled' ? x.value : null))
-
+   
   const services = (servicesList as any[]) || []
   const settings = siteSettings as any
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rufusdesign.co.uk'
@@ -73,4 +73,3 @@ export default async function ServicesPage() {
     </>
   )
 }
-console.log('services data:', JSON.stringify(services.slice(0, 1)))
