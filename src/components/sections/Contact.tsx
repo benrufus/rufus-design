@@ -61,7 +61,7 @@ export default function Contact({ phone, email }: ContactProps) {
     <section id="contact" ref={ref as React.RefObject<HTMLElement>} className={`contact-section${visible ? ' visible' : ''}`}>
       <div className="contact-info">
         <p className="section-eyebrow">Get in touch</p>
-        <h2 className="contact-heading">Let&apos;s<br /><span className="text-orange">talk.</span></h2>
+        <h2 className="contact-heading">Let&apos;s<br /><span className="text-orange">talk</span>.</h2>
         <p className="contact-subtext">
           To arrange a meeting, discuss your business goals or even just have a quick cuppa.
         </p>
