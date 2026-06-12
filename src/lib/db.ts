@@ -94,16 +94,6 @@ export async function getTeam() {
   return data || []
 }
 
-export async function getServices() {
-  const sb = await createClient()
-  const { data } = await sb
-    .from('services')
-    .select('*')
-    .eq('active', true)
-    .order('sort_order')
-  return data || []
-}
-
 export async function getStats(page = 'home') {
   const sb = await createClient()
   const { data } = await sb
