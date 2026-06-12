@@ -45,11 +45,12 @@ export default async function WhereWeOperatePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumb crumbs={[{ label: 'Home', href: '/' }, { label: 'Where We Operate' }]} />
 
-      <section className="page-hero" style={{ background: 'var(--bg)' }}>
-        <p className="page-hero-label">Where we work</p>
-        <h1>Where we operate<span className="dot">.</span></h1>
-        <p className="page-hero-intro">Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK.</p>
-      </section>
+      <section className="page-hero" style={{ background: 'var(--bg)', position: 'relative' }}>
+  <GridCanvas />
+  <p className="page-hero-label">Where we work</p>
+  <h1>Where we operate<span className="dot">.</span></h1>
+  <p className="page-hero-intro">Based in Berkhamsted, we work with businesses across Hertfordshire, Buckinghamshire, and throughout the UK.</p>
+</section>
 
       <section className="section" style={{ background: 'var(--bg2)' }}>
         {locationList.length > 0 ? (
