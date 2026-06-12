@@ -8,9 +8,11 @@ const SERVICE_WORDS = ['Web Design', 'Development', 'SEO & PPC', 'Branding', 'IT
 interface Props {
   town: string
   intro?: string
+  coverImage?: string
+  body?: string
 }
 
-export default function LocationHero({ town, intro }: Props) {
+export default function LocationHero({ town, intro, coverImage, body }: Props) {
   const [current, setCurrent] = useState(0)
   const [exiting, setExiting] = useState(false)
   const glowRef = useRef<HTMLDivElement>(null)
@@ -31,6 +33,32 @@ export default function LocationHero({ town, intro }: Props) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  if (coverImage) {
+    return (
+      <section className="cover-hero">
+        <div className="cover-image-wrap">
+          <img src={coverImage} alt={`Web design in ${town}`} className="cover-image" />
+          <div className="cover-overlay" />
+          <div className="cover-gradient" />
+          <div className="cover-content">
+            <p className="section-eyebrow">{town}, Hertfordshire · Est. 2007</p>
+            <h1 className="cover-title">
+              <span className={`hero-cycle-word${exiting ? ' exiting' : ''}`} style={{ display: 'block', color: 'var(--orange)', fontSize: 'inherit', fontFamily: 'inherit', fontWeight: 'inherit' }}>
+                {SERVICE_WORDS[current]}
+              </span>
+              {town}<span className="text-orange">.</span>
+            </h1>
+            {intro && <p className="cover-excerpt">{intro}</p>}
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+              <Link href="/contact" className="btn-primary">Let&apos;s talk</Link>
+              <Link href="/work" className="btn-secondary">Our work</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="hero">
       <GridCanvas />
@@ -45,14 +73,12 @@ export default function LocationHero({ town, intro }: Props) {
           </span>
           <span className="hero-static">{town}.</span>
         </h1>
-        <div className="hero-bottom">
-          <p className="hero-body">
-            {intro || `Professional web design and digital marketing services in ${town}, Hertfordshire.`}
-          </p>
-          <div className="hero-buttons">
-            <Link href="/contact" className="btn-primary">Let&apos;s talk</Link>
-            <Link href="/work" className="btn-secondary">Our work</Link>
-          </div>
+        <p className="hero-body">
+          {intro || `Professional web design and digital marketing services in ${town}, Hertfordshire.`}
+        </p>
+        <div className="hero-buttons">
+          <Link href="/contact" className="btn-primary">Let&apos;s talk</Link>
+          <Link href="/work" className="btn-secondary">Our work</Link>
         </div>
       </div>
       <div className="hero-scroll-indicator">
