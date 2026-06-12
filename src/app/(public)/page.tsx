@@ -9,7 +9,9 @@ import {
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeo('home').catch(() => null)
   return {
-    title: seo?.title || 'Web Design Berkhamsted',
+    title: {
+      absolute: seo?.title || 'Rufus Design | Web Design Berkhamsted'
+    },
     description: seo?.description || 'Award-winning web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
     alternates: { canonical: '/' },
   }
