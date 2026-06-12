@@ -60,7 +60,7 @@ export default function LocationHero({ town, intro, coverImage, body }: Props) {
             {intro && <p className="cover-excerpt">{intro}</p>}
             <div className="hero-buttons" style={{ marginTop: '1.5rem' }}>
               <Link href="/contact" className="btn-primary">Let&apos;s talk</Link>
-              <Link href="/work" className="btn-secondary">Our work</Link>
+              <Link href="/about" className="btn-secondary">About Rufus</Link>
             </div>
           </div>
         </div>
