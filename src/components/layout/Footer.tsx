@@ -115,11 +115,13 @@ export default function Footer() {
             <li><a href={`mailto:${email}`} className="footer-link-muted">{email}</a></li>
             {phone && <li><a href={`tel:${phone}`} className="footer-link-muted">{phone}</a></li>}
             {address && (
-              <li className="footer-address">
-                {address.split(',').map((part, i) => (
-                  <span key={i}>{part.trim()}</span>
-                ))}
-              </li>
+              <li>
+  <address className="footer-address" style={{ fontStyle: 'normal' }}>
+    {address.split(',').map((part, i) => (
+      <span key={i}>{part.trim()}</span>
+    ))}
+  </address>
+</li>
             )}
           </ul>
         </div>
