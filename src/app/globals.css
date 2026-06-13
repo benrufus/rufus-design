@@ -751,8 +751,8 @@ blockquote {
   .about-section { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-story-grid { grid-template-columns: 1fr; }
   .contact-grid, .contact-section { grid-template-columns: 1fr; gap: 3rem; }
-  .cover-image-wrap { max-height: none; min-height: 420px; }
-  .cover-image { max-height: none; min-height: 420px; }
+  .cover-image-wrap { max-height: none; min-height: 500px; }
+  .cover-image { max-height: none; min-height: 500px; }
   .cover-content { padding-bottom: 2rem; }
   .cover-tags { margin-top: 2rem; }
   .work-gallery { columns: 1; }
