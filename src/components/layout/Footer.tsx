@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useCookieConsent } from '@/components/ui/CookieConsent'
 
 interface Settings {
   phone?: string
@@ -51,6 +52,7 @@ const MONITORS = [
 
 export default function Footer() {
   const [settings, setSettings] = useState<Settings>({})
+  const { openPreferences } = useCookieConsent()
 
   useEffect(() => {
     createClient().from('site_settings').select('phone,email,address,facebook_url,instagram_url,linkedin_url')
@@ -74,7 +76,7 @@ export default function Footer() {
         <div>
           <Link href="/" className="footer-logo">Rufus<span>.</span></Link>
           <p className="footer-tagline">Web design, Web development &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
-          <p className="footer-tagline">Operate in Berkhamsted, Hemel Hempstead, Tring, Aylesbury, Chesham, St Albans, Watford, Hertfordshire, Buckinghamshire, London</p>
+          <p className="footer-tagline">We operate in Berkhamsted, Hemel Hempstead, Tring, Aylesbury, Chesham, St Albans, Watford, Hertfordshire, Buckinghamshire, London</p>
           {socials.length > 0 && (
             <div className="footer-socials">
               {socials.map(({ label, href, Icon }) => (
@@ -117,12 +119,12 @@ export default function Footer() {
             {phone && <li><a href={`tel:${phone}`} className="footer-link-muted">{phone}</a></li>}
             {address && (
               <li>
-  <address className="footer-address" style={{ fontStyle: 'normal' }}>
-    {address.split(',').map((part, i) => (
-      <span key={i}>{part.trim()}</span>
-    ))}
-  </address>
-</li>
+                <address className="footer-address" style={{ fontStyle: 'normal' }}>
+                  {address.split(',').map((part, i) => (
+                    <span key={i}>{part.trim()}</span>
+                  ))}
+                </address>
+              </li>
             )}
           </ul>
         </div>
@@ -139,13 +141,13 @@ export default function Footer() {
           {MONITORS.map((monitor, i) => (
             <div key={i} className="footer-status-item">
               <p className="footer-status-name">{monitor.name}</p>
-                <img
-                  src={`https://monitor.rufusdesign.co.uk/api/badge/${monitor.id}/uptime`}
-                  alt={`${monitor.name} uptime`}
-                  className="footer-status-badge"
-                  width="138"
-                  height="20"
-                />
+              <img
+                src={`https://monitor.rufusdesign.co.uk/api/badge/${monitor.id}/uptime`}
+                alt={`${monitor.name} uptime`}
+                className="footer-status-badge"
+                width="138"
+                height="20"
+              />
               <p className="footer-status-location">{monitor.location}</p>
             </div>
           ))}
@@ -157,6 +159,20 @@ export default function Footer() {
         <div className="footer-legal">
           <Link href="/privacy" className="footer-link-muted">Privacy Policy</Link>
           <Link href="/terms" className="footer-link-muted">Terms &amp; Conditions</Link>
+          <button
+            onClick={openPreferences}
+            className="footer-link-muted"
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              font: 'inherit',
+              fontSize: 'inherit',
+            }}
+          >
+            Cookie preferences
+          </button>
         </div>
       </div>
     </footer>
