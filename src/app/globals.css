@@ -27,6 +27,7 @@
    23. Components — Location Grid
    24. Components — About
    25. Footer
+   25b. Cookie Banner
    26. CMS — Layout & Nav
    27. CMS — Form Elements
    28. CMS — Buttons & Badges
@@ -651,6 +652,138 @@ blockquote {
 .footer-status-location { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.05em; }
 .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--muted); }
 .footer-legal { display: flex; gap: 1.5rem; }
+
+/* ─── 25b. Cookie Consent ────────────────────────────── */
+@keyframes cookieSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes cookieSlideDown {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(100%); opacity: 0; }
+}
+
+.cookie-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--bg2);
+  border-top: 3px solid var(--orange);
+  padding: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 -8px 40px rgba(255, 128, 0, 0.15);
+  animation: cookieSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cookie-banner--out {
+  animation: cookieSlideDown 0.35s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-banner,
+  .cookie-banner--out { animation: none; }
+}
+
+.cookie-banner__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.cookie-banner__pill {
+  display: inline-block;
+  background: var(--orange);
+  color: var(--bg2);
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3em 0.75em;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.cookie-banner__text {
+  flex: 1;
+  min-width: 200px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.cookie-banner__link {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.cookie-banner__link:hover { color: #fff; }
+
+.cookie-banner__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Accept — reuses .btn-primary but needs dark text for contrast */
+.cookie-banner__accept {
+  color: var(--bg2);
+  padding: 0.75rem 1.75rem;
+}
+
+.cookie-banner__accept:hover {
+  color: var(--bg2);
+}
+
+.cookie-banner__reject {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.cookie-banner__reject:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .cookie-banner__actions {
+    flex-direction: column;
+  }
+  .cookie-banner__accept,
+  .cookie-banner__reject {
+    width: 100%;
+    text-align: center;
+  }
+}
 
 /* ─── 26. CMS — Layout & Nav ─────────────────────────── */
 .cms-wrap { display: flex; min-height: 100vh; background: #0a0a0a; }
