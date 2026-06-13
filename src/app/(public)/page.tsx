@@ -66,10 +66,11 @@ export default async function HomePage() {
       contactType: 'customer service',
     },
     sameAs: [
-      'https://www.facebook.com/rufusdesign',
-      'https://www.instagram.com/rufusdesign',
-      'https://www.linkedin.com/company/rufus-design',
-    ],
+  (siteSettings as any)?.facebook_url,
+  (siteSettings as any)?.instagram_url,
+  (siteSettings as any)?.linkedin_url,
+  'https://www.google.com/maps?cid=3584211206830505755',
+].filter(Boolean),
   }
 
   const visibleSections = ((sections as any[]) || [])
