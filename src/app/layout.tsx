@@ -4,6 +4,8 @@ import './globals.css'
 import CustomCursor from '@/components/ui/CustomCursor'
 import GridCanvas from '@/components/ui/GridCanvas'
 import { getSeoSettings, getSiteSettings } from '@/lib/db'
+import CookieConsent from '@/components/ui/CookieConsent'
+import ConsentScripts from '@/components/ui/ConsentScripts'
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -61,6 +63,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="site-wrap">
           {children}
         </div>
+        <CookieConsent />
+        <ConsentScripts />
       </body>
     </html>
   )
