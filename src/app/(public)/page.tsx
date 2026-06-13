@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       absolute: seo?.title || 'Rufus Design | Web Design Berkhamsted'
     },
     description: seo?.description || 'Award-winning web design and digital marketing agency based in Berkhamsted, Hertfordshire. Est. 2007.',
-    alternates: { canonical: '/' },
+    alternates: { canonical: 'https://www.rufusdesign.co.uk' },
   }
 }
 
