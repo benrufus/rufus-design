@@ -73,7 +73,8 @@ export default function Footer() {
       <div className="footer-grid">
         <div>
           <Link href="/" className="footer-logo">Rufus<span>.</span></Link>
-          <p className="footer-tagline">Web design &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
+          <p className="footer-tagline">Web design, Web development &amp; digital marketing. Berkhamsted, Hertfordshire. Est. 2007.</p>
+          <p className="footer-tagline">Operate in Berkhamsted, Hemel Hempstead, Tring, Aylesbury, Chesham, St Albans, Watford, Hertfordshire, Buckinghamshire, London</p>
           {socials.length > 0 && (
             <div className="footer-socials">
               {socials.map(({ label, href, Icon }) => (
