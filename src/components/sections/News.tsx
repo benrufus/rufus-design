@@ -26,7 +26,7 @@ export default function News({ posts, showTitle = true }: NewsProps) {
         {posts.map((post, i) => (
           <Link key={post.id} href={`/news/${post.slug}`} className={`news-card reveal reveal-delay-${Math.min(i + 1, 4)}${visible ? ' visible' : ''}`} style={{ display: 'block' }}>
             <div className="news-card-img">
-              {post.cover_image && <img src={post.cover_image} alt={post.title} />}
+              {post.cover_image && <img src={post.cover_image} alt={post.title} loading="lazy" />}
             </div>
             <div className="news-card-body">
               {post.published_at && (
