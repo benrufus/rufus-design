@@ -672,6 +672,20 @@ blockquote {
 .cms-sidebar-footer a, .cms-sidebar-footer button { font-size: 0.8rem; color: rgba(255,255,255,0.4); background: none; border: none; text-align: left; padding: 0; transition: color 0.2s; }
 .cms-sidebar-footer a:hover, .cms-sidebar-footer button:hover { color: #fff; }
 .cms-main { flex: 1; padding: 2.5rem; overflow-x: hidden; }
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: var(--orange);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 999;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.skip-nav:focus { top: 0; }
 
 /* ─── 27. CMS — Form Elements ────────────────────────── */
 .field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
