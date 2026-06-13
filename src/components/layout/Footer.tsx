@@ -139,11 +139,13 @@ export default function Footer() {
           {MONITORS.map((monitor, i) => (
             <div key={i} className="footer-status-item">
               <p className="footer-status-name">{monitor.name}</p>
-              <img
-                src={`https://monitor.rufusdesign.co.uk/api/badge/${monitor.id}/uptime`}
-                alt={`${monitor.name} uptime`}
-                className="footer-status-badge"
-              />
+                <img
+                  src={`https://monitor.rufusdesign.co.uk/api/badge/${monitor.id}/uptime`}
+                  alt={`${monitor.name} uptime`}
+                  className="footer-status-badge"
+                  width="138"
+                  height="20"
+                />
               <p className="footer-status-location">{monitor.location}</p>
             </div>
           ))}
