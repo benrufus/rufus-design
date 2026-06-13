@@ -48,6 +48,39 @@ export default async function HomePage() {
     logoStrips: logoStrips || [],
   }
 
+  const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Rufus Design',
+  url: 'https://www.rufusdesign.co.uk',
+  logo: 'https://www.rufusdesign.co.uk/icon.png',
+  foundingDate: '2007',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Friars Field',
+    addressLocality: 'Berkhamsted',
+    addressRegion: 'Hertfordshire',
+    addressCountry: 'GB',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+441442967775',
+    contactType: 'customer service',
+  },
+  sameAs: [
+    'https://www.facebook.com/rufusdesign',
+    'https://www.instagram.com/rufusdesign',
+    'https://www.linkedin.com/company/rufus-design',
+  ],
+}
+
+return (
+  <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    {visibleSections.map(...)}
+  </>
+)
+  
   const visibleSections = ((sections as any[]) || [])
     .filter((s: any) => s.visible)
     .sort((a: any, b: any) => a.sort_order - b.sort_order)
