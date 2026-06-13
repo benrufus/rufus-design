@@ -56,6 +56,7 @@ export default function WorkGrid({ items, showTitle = false }: WorkGridProps) {
   src={item.cover_image}
   alt={item.title}
   loading={i === 0 ? 'eager' : 'lazy'}
+  fetchPriority={i === 0 ? 'high' : 'auto'}
   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
   onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
   onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
