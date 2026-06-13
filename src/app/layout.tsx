@@ -30,8 +30,9 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: settings?.favicon_url || '/icon.png',
     },
     openGraph: {
-      images: settings?.og_image_url ? [{ url: settings.og_image_url, width: 1200, height: 630 }] : [],
-    },
+  url: 'https://www.rufusdesign.co.uk',
+  images: settings?.og_image_url ? [{ url: settings.og_image_url, width: 1200, height: 630 }] : [],
+},
   }
 }
 
