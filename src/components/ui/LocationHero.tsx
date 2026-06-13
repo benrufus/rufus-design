@@ -37,7 +37,7 @@ export default function LocationHero({ town, intro, coverImage, body }: Props) {
     return (
       <section className="cover-hero">
         <div className="cover-image-wrap cover-image-wrap--news" style={{ minHeight: '60vh' }}>
-  <img src={coverImage} alt={`Web design in ${town}`} className="cover-image cover-image--news" style={{ minHeight: '60vh' }} />
+  <img src={coverImage} alt={`Web design in ${town}`} className="cover-image cover-image--news" style={{ minHeight: '60vh' }} loading="eager" />
           <div className="cover-overlay" />
           <div className="cover-gradient" />
           <div className="cover-content">
