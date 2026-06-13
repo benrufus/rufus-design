@@ -14,7 +14,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   return (
     <>
       <Nav />
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
       <Footer />
     </>
   )
