@@ -53,12 +53,13 @@ export default function WorkGrid({ items, showTitle = false }: WorkGridProps) {
               <div style={{ aspectRatio: '16/9', overflow: 'hidden', background: '#1a1a1a' }}>
                 {item.cover_image ? (
                   <img
-                    src={item.cover_image}
-                    alt={item.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-                  />
+  src={item.cover_image}
+  alt={item.title}
+  loading={i === 0 ? 'eager' : 'lazy'}
+  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
+  onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
+  onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+/>
                 ) : (
                   <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '3rem', color: 'rgba(255,128,0,0.1)' }}>R.</span>
