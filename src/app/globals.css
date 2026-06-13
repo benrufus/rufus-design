@@ -562,7 +562,7 @@ blockquote {
 .cover-content { position: absolute; bottom: 0; left: 0; right: 0; padding: clamp(1.5rem, 4vw, 3rem); padding-top: 3rem; padding-bottom: 3rem; }
 .cover-title { font-family: var(--font-heading); font-weight: 800; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; color: #fff; max-width: 800px; }
 .cover-excerpt { margin-top: 1rem; font-size: clamp(1rem, 1.4vw, 1.1rem); color: rgba(255,255,255,0.7); max-width: 600px; line-height: 1.6; }
-.cover-tag { display: inline-block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(255,128,0,0.15); color: var(--orange); padding: 0.25em 0.75em; margin-bottom: 1rem; margin-right: 0.4rem; }
+.cover-tag { display: inline-block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(255,128,0,0.15); color: var(--orange); padding: 0.25em 0.75em; margin-right: 0.4rem; }
 .cover-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
 .cover-link {
   display: inline-flex;
