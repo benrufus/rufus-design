@@ -556,7 +556,7 @@ blockquote {
 
 /* ─── 20. Cover Hero ─────────────────────────────────── */
 .cover-hero { padding-top: 72px; background: var(--bg); position: relative; }
-.cover-image-wrap { width: 100%; min-height: 500px; overflow: hidden; position: relative; }
+.cover-image-wrap { width: 100%; min-height: 500px; max-height: 600px; overflow: hidden; position: relative; }
 .cover-image { width: 100%; min-height: 500px; object-fit: cover; display: block; }
 .cover-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
 .cover-gradient { position: absolute; bottom: 0; left: 0; right: 0; height: 80%; background: linear-gradient(to top, rgba(17,17,17,1) 0%, rgba(17,17,17,0.6) 50%, transparent 100%); }
