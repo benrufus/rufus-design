@@ -1,4 +1,3 @@
-<a href="#main-content" className="skip-nav">Skip to content</a>
 'use client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -33,14 +32,11 @@ export default function Nav() {
 
   return (
     <>
+      <a href="#main-content" className="skip-nav">Skip to content</a>
       <header className={`nav${scrolled ? ' scrolled' : ''}`}>
-
-        {/* Logo — left */}
         <Link href="/" className="nav-logo">
           Rufus<span>.</span>
         </Link>
-
-        {/* Right side — Let's talk + MENU */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <button
             className="nav-hamburger"
@@ -50,10 +46,7 @@ export default function Nav() {
             {open ? 'CLOSE' : 'MENU'}
           </button>
         </div>
-
       </header>
-
-      {/* Fullscreen overlay */}
       <div className={`fullscreen-menu${open ? ' open' : ''}`}>
         <nav>
           {MENU_LINKS.map(l => (
@@ -62,7 +55,9 @@ export default function Nav() {
             </Link>
           ))}
         </nav>
-        <div className="menu-dog"><img src="/RufusDoggo.png" alt="Rufus" style={{ width: '220px', height: '220px', objectFit: 'cover'}} /></div>
+        <div className="menu-dog">
+          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '220px', height: '220px', objectFit: 'cover' }} />
+        </div>
       </div>
     </>
   )
