@@ -42,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${raleway.variable} ${dmSans.variable}`}>
       <head>
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt" />
         {seo?.google_verification && (
           <meta name="google-site-verification" content={seo.google_verification} />
         )}
