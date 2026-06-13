@@ -29,7 +29,7 @@ export default function Hero({ words = DEFAULT_WORDS, intro }: HeroProps) {
       <div style={{ maxWidth: '900px' }}>
         <p className="hero-eyebrow">Berkhamsted · Hertfordshire · Est. 2007</p>
         <h1>
-          <span className="hero-line1">We do</span>
+          <span className="hero-line1">We do&nbsp;</span>
           <span className="hero-line2">
             <span
               className="hero-word"
