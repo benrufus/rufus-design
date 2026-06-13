@@ -125,7 +125,7 @@ export default function Footer() {
         </div>
 
         <div className="menu-dog">
-          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '200px', height: '200px', objectFit: 'contain' }} />
+          <img src="/RufusDoggo.png" alt="Rufus" style={{ width: '150px', height: '150px', objectFit: 'contain' }} />
         </div>
       </div>
 
