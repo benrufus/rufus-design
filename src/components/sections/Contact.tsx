@@ -84,6 +84,7 @@ export default function Contact({ phone, email }: ContactProps) {
           type="text"
           name="_honey"
           id="_honey"
+          aria-hidden="true"
           tabIndex={-1}
           autoComplete="off"
           style={{ opacity: 0, position: 'absolute', top: 0, left: 0, height: 0, width: 0, zIndex: -1 }}
