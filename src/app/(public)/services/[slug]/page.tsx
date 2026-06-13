@@ -73,8 +73,8 @@ export default async function ServicePage({ params }: Props) {
 
       <section className="section" style={{ background: 'var(--bg2)', paddingTop: '3rem', paddingBottom: '3rem' }}>
         <p className="section-label">Ready to get started?</p>
-        <p>Whether you need a new website, help improving your Google / AI rankings, better hosting or support with digital marketing, we'd love to hear about your project. Complete the form below and we'll be in touch as soon as possible.</p>
         <h2 className="section-title" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', marginBottom: '2rem' }}>{s.title} for your business<span className="dot">.</span></h2>
+        <p>Whether you need a new website, help improving your Google / AI rankings, better hosting or support with digital marketing, we'd love to hear about your project. Complete the form below and we'll be in touch as soon as possible.</p>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <Link href="/about" className="btn-primary">About Rufus</Link>
           <Link href="/services" className="btn-secondary">All services</Link>
