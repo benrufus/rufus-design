@@ -1,3 +1,4 @@
+<a href="#main-content" className="skip-nav">Skip to content</a>
 'use client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
